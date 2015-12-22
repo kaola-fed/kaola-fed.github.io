@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-12-22T08:08:23.136Z</updated>
+  <updated>2015-12-22T08:34:11.163Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -13,6 +13,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何发表文章]]></title>
+    <link href="http://yoursite.com/2015/12/22/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"/>
+    <id>http://yoursite.com/2015/12/22/如何发布文章/</id>
+    <published>2015-12-22T08:34:11.163Z</published>
+    <updated>2015-12-22T08:34:11.163Z</updated>
+    <content type="html"><![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>安装<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo</a></li>
+<li>clone <code>kaola-fed/kaola-fed.github.io</code>到本地<a href="https://github.com/kaola-fed/kaola-fed.github.io.git" target="_blank" rel="external">https://github.com/kaola-fed/kaola-fed.github.io.git</a></li>
+</ol>
+<h2 id="u5F00_u59CB_u53D1_u5E03"><a href="#u5F00_u59CB_u53D1_u5E03" class="headerlink" title="开始发布"></a>开始发布</h2><ol>
+<li>在code目录下， 首先执行npm install安装依赖module，执行<code>hexo new 文章名称</code>，新建一篇文章；</li>
+<li>在source/_post目录下，找到新建的文件，编辑好文章后，执行<code>hexo server</code>，运行本地博客服务，这时候可以打开<code>http://localhost:4000</code>就可以看到新增的内容了；</li>
+<li>确认编辑好后，执行hexo generate生成静态文件，把生成的public下的静态文件拷贝到最外层文件中， 提交所有更改到master分支；</li>
+<li>等待一段时间，wercker自动部署好后， 就可以在<code>http://kaola-fed.github.io</code>看到更新了；</li>
+</ol>
+<h2 id="Refs_3A"><a href="#Refs_3A" class="headerlink" title="Refs:"></a>Refs:</h2><ul>
+<li><a href="http://wsgzao.github.io/post/hexo-guide/" target="_blank" rel="external">使用GitHub + Hexo搭建博客</a></li>
+<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo文档</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>安装<a href="https:/]]>
+    </summary>
+    
+      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[impress.js 调研报告]]></title>
@@ -461,38 +493,6 @@
     </summary>
     
       <category term="javascript" scheme="http://yoursite.com/tags/javascript/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何发表文章]]></title>
-    <link href="http://yoursite.com/2015/12/22/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"/>
-    <id>http://yoursite.com/2015/12/22/如何发布文章/</id>
-    <published>2015-12-22T08:01:35.449Z</published>
-    <updated>2015-12-22T08:01:35.449Z</updated>
-    <content type="html"><![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
-<li>安装<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo</a></li>
-<li>clone <code>kaola-fed/kaola-fed.github.io</code>到本地<a href="https://github.com/kaola-fed/kaola-fed.github.io.git" target="_blank" rel="external">https://github.com/kaola-fed/kaola-fed.github.io.git</a></li>
-</ol>
-<h2 id="u5F00_u59CB_u53D1_u5E03"><a href="#u5F00_u59CB_u53D1_u5E03" class="headerlink" title="开始发布"></a>开始发布</h2><ol>
-<li>在code目录下， 执行<code>hexo new 文章名称</code>，新建一篇文章；</li>
-<li>在source/_post目录下，找到新建的文件，编辑好文章后，执行<code>hexo server</code>，运行本地博客服务，这时候可以打开<code>http://localhost:4000</code>就可以看到新增的内容了；</li>
-<li>确认编辑好后，执行hexo generate生成静态文件，把生成的public下的静态文件拷贝到最外层文件中， 提交所有更改到master分支；</li>
-<li>等待一段时间，wercker自动部署好后， 就可以在<code>http://kaola-fed.github.io</code>看到更新了；</li>
-</ol>
-<h2 id="Refs_3A"><a href="#Refs_3A" class="headerlink" title="Refs:"></a>Refs:</h2><ul>
-<li><a href="http://wsgzao.github.io/post/hexo-guide/" target="_blank" rel="external">使用GitHub + Hexo搭建博客</a></li>
-<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo文档</a></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
-<li>安装<a href="https:/]]>
-    </summary>
-    
-      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
     
       <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
     
