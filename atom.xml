@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-12-22T08:34:11.163Z</updated>
+  <updated>2015-12-24T02:17:48.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,43 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[如何发表文章]]></title>
-    <link href="http://yoursite.com/2015/12/22/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"/>
-    <id>http://yoursite.com/2015/12/22/如何发布文章/</id>
-    <published>2015-12-22T08:34:11.163Z</published>
-    <updated>2015-12-22T08:34:11.163Z</updated>
-    <content type="html"><![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
-<li>安装<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo</a></li>
-<li>clone <code>kaola-fed/kaola-fed.github.io</code>到本地<a href="https://github.com/kaola-fed/kaola-fed.github.io.git" target="_blank" rel="external">https://github.com/kaola-fed/kaola-fed.github.io.git</a></li>
-</ol>
-<h2 id="u5F00_u59CB_u53D1_u5E03"><a href="#u5F00_u59CB_u53D1_u5E03" class="headerlink" title="开始发布"></a>开始发布</h2><ol>
-<li>在code目录下， 首先执行npm install安装依赖module，执行<code>hexo new 文章名称</code>，新建一篇文章；</li>
-<li>在source/_post目录下，找到新建的文件，编辑好文章后，执行<code>hexo server</code>，运行本地博客服务，这时候可以打开<code>http://localhost:4000</code>就可以看到新增的内容了；</li>
-<li>确认编辑好后，执行hexo generate生成静态文件，把生成的public下的静态文件拷贝到最外层文件中， 提交所有更改到master分支；</li>
-<li>等待一段时间，wercker自动部署好后， 就可以在<code>http://kaola-fed.github.io</code>看到更新了；</li>
-</ol>
-<h2 id="Refs_3A"><a href="#Refs_3A" class="headerlink" title="Refs:"></a>Refs:</h2><ul>
-<li><a href="http://wsgzao.github.io/post/hexo-guide/" target="_blank" rel="external">使用GitHub + Hexo搭建博客</a></li>
-<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo文档</a></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
-<li>安装<a href="https:/]]>
-    </summary>
-    
-      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[impress.js 调研报告]]></title>
-    <link href="http://yoursite.com/2015/12/22/impress.js%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A/"/>
-    <id>http://yoursite.com/2015/12/22/impress.js调研报告/</id>
-    <published>2015-12-22T08:08:23.136Z</published>
-    <updated>2015-12-22T08:08:23.136Z</updated>
+    <link href="http://yoursite.com/2015/12/24/impress.js%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A/"/>
+    <id>http://yoursite.com/2015/12/24/impress.js调研报告/</id>
+    <published>2015-12-24T02:17:48.000Z</published>
+    <updated>2015-12-24T02:17:48.000Z</updated>
     <content type="html"><![CDATA[<p>在开始阅读本文之前，你至少应该打开官网的<a href="http://impress.github.io/impress.js" target="_blank" rel="external">例子</a>看看，并且<a href="https://github.com/stefina/impressJS" target="_blank" rel="external">下载代码</a>到本地跑跑 :-)</p>
 <p>在阅读过程中，强烈建议阅读的同时不断查看源码，不断对照官网提供的<a href="http://impress.github.io/impress.js" target="_blank" rel="external">例子</a></p>
 <h2 id="u4E00_u3001_u547D_u540D"><a href="#u4E00_u3001_u547D_u540D" class="headerlink" title="一、命名"></a>一、命名</h2><p>根据页面结构：</p>
@@ -67,11 +35,11 @@
 <tbody>
 <tr>
 <td style="text-align:center">「PPT」</td>
-<td style="text-align:center">\<div id="impress\"></div></td>
+<td style="text-align:center"><code>&lt;div id=impress\&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align:center">「Page」</td>
-<td style="text-align:center">\<div class="step" \=""></div></td>
+<td style="text-align:center"><code>&lt;div class=&quot;step&quot;\&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -248,13 +216,17 @@
 <h2 id="u4E94_u3001_u9879_u76EE_u4E2D_u5982_u4F55_u7528_26amp_3B_u501F_u9274_u4EF7_u503C"><a href="#u4E94_u3001_u9879_u76EE_u4E2D_u5982_u4F55_u7528_26amp_3B_u501F_u9274_u4EF7_u503C" class="headerlink" title="五、项目中如何用&amp;借鉴价值"></a>五、项目中如何用&amp;借鉴价值</h2><h3 id="u95EE_u9898_uFF1A"><a href="#u95EE_u9898_uFF1A" class="headerlink" title="问题："></a>问题：</h3><ol>
 <li>兼容性非常差，需要&gt;=IE10，且IE全都不支持transform-style:preserve-3d</li>
 <li>移动端展示效果还有待更全面的测试，而作者完全弃用了移动端，虽然作者在开发代码之后的几年移动端性能进步很大，但根据其它项目经验来看在大量3D元素的情况下至少低端机帧率会降低很多，用户体验差的话还不如不用，比如<a href="https://tianyn1990.github.io/dist/views/ppt/ppt.html#/beach" target="_blank" rel="external">这个</a>，其实也做了手机的适配，但效果就…</li>
-<li>需要有一定的改造成本和测试成本，这个框架可能不适合直接使用，需要定制化</li>
+<li>需要有一定的改造成本和测试成本，这个框架可能不适合直接使用，需要定制</li>
 </ol>
-<h3 id="u4F18_u52BF_uFF1A"><a href="#u4F18_u52BF_uFF1A" class="headerlink" title="优势："></a>优势：</h3><ol>
+<h3 id="u4F18_u52BF_uFF1A"><a href="#u4F18_u52BF_uFF1A" class="headerlink" title="优势："></a>优势：</h3><ul>
 <li>的确很酷炫啊有木有</li>
 <li>兼容和移动端问题，可以仅仅针对部分使用现代PC浏览器的用户提供一个非常酷炫的页面，类似天猫双十一期间的一些游戏和canvas活动页</li>
-<li>移动端的话也不是不能用，可以使用它的这种设计思想，进行canvas改造，完全使用canvas实现，这的确需要一部分成本，但效果和性能都是值得期待的</li>
-</ol>
+<li>移动端的话由于性能较差，但如果使用经过极大优化的js动画（如：<a href="http://julian.com/research/velocity/" target="_blank" rel="external">velocity</a>），并且适当避免复杂的3d效果，效果和性能还是值得期待的。js动画可优化的部分至少包括以下几点：（当然不完整）<ul>
+<li>缓存动画元素的状态（类似canvas），减少读操作</li>
+<li>同步的DOM读写：框架层面上，在浏览器一帧的渲染中，所有DOM操作统一先读后写，减少<a href="http://wilsonpage.co.uk/preventing-layout-thrashing/" target="_blank" rel="external">layout thrashing</a></li>
+</ul>
+</li>
+</ul>
 <h3 id="u501F_u9274_uFF1A"><a href="#u501F_u9274_uFF1A" class="headerlink" title="借鉴："></a>借鉴：</h3><p>impress.js的酷炫效果源于将平面页面（PPT）的各个部分（Page）拆分出来，然后三维化了（可近可远、可斜可转、甚至可以在你后面）。<br>借鉴这种思想，打开脑洞：当你点击页面上一个人头像的小图标之后，屏幕会拉近那个头像图标并最终进入到它的内部，（eng二声），<br>那里会出现另一个页面，就是那个头像对应的人的主页。如果单页面应用做成这样，光是想想就有点小激动呢<del>~</del>~</p>
 <h2 id="u516D_u3001_u7ED3_u8BED"><a href="#u516D_u3001_u7ED3_u8BED" class="headerlink" title="六、结语"></a>六、结语</h2><p>本文的语言还需要再进行梳理，有些内容自己理解了但没讲清楚，而有些内容有可能讲的过细。</p>
 <h2 id="u9644_uFF1A_u4EE3_u7801_u8BE6_u7EC6_u5206_u6790_uFF08_u672A_u5B8C_u6210-_uFF09"><a href="#u9644_uFF1A_u4EE3_u7801_u8BE6_u7EC6_u5206_u6790_uFF08_u672A_u5B8C_u6210-_uFF09" class="headerlink" title="附：代码详细分析（未完成..）"></a>附：代码详细分析（未完成..）</h2><h3 id="1_u3001_u89E3_u51B3_u517C_u5BB9_u6027"><a href="#1_u3001_u89E3_u51B3_u517C_u5BB9_u6027" class="headerlink" title="1、解决兼容性"></a>1、解决兼容性</h3><p>为了解决「不同浏览器中，给DOM赋予内联样式的兼容性问题」，作者首先参考<a href="https://modernizr.com/" target="_blank" rel="external">Modernizr</a>写了一个功能函数，见下方代码，值得认真读一下</p>
@@ -387,10 +359,10 @@
   
   <entry>
     <title><![CDATA[JS中的事件循环与定时器]]></title>
-    <link href="http://yoursite.com/2015/12/22/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/"/>
-    <id>http://yoursite.com/2015/12/22/JS中的事件循环与定时器/</id>
-    <published>2015-12-22T08:04:32.074Z</published>
-    <updated>2015-12-22T08:04:32.074Z</updated>
+    <link href="http://yoursite.com/2015/12/23/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/"/>
+    <id>http://yoursite.com/2015/12/23/JS中的事件循环与定时器/</id>
+    <published>2015-12-23T06:42:46.000Z</published>
+    <updated>2015-12-23T06:42:46.000Z</updated>
     <content type="html"><![CDATA[<p><em>本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。</em> <strong>Orz</strong></p>
 <h3 id="u4E00_u3001_u5355_u7EBF_u7A0B"><a href="#u4E00_u3001_u5355_u7EBF_u7A0B" class="headerlink" title="一、单线程"></a>一、单线程</h3><p>javascript单线程执行，是由浏览器的场景决定的，避免了复杂的同步问题。HTML5提出「Web Worker」标准，允许js创建多个线程，但子线程仍受主线程控制，且不能操作DOM，js的本质未变。</p>
 <h3 id="u4E8C_u3001_u4EFB_u52A1_u961F_u5217__26amp_3B__u4E8B_u4EF6_u5FAA_u73AF"><a href="#u4E8C_u3001_u4EFB_u52A1_u961F_u5217__26amp_3B__u4E8B_u4EF6_u5FAA_u73AF" class="headerlink" title="二、任务队列 &amp; 事件循环"></a>二、任务队列 &amp; 事件循环</h3><p><img src="../../../../uploads/images/taskqueue.png" alt="image"></p>
@@ -493,6 +465,38 @@
     </summary>
     
       <category term="javascript" scheme="http://yoursite.com/tags/javascript/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何发表文章]]></title>
+    <link href="http://yoursite.com/2015/12/23/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"/>
+    <id>http://yoursite.com/2015/12/23/如何发布文章/</id>
+    <published>2015-12-23T06:42:46.000Z</published>
+    <updated>2015-12-23T06:42:46.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>安装<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo</a></li>
+<li>clone <code>kaola-fed/kaola-fed.github.io</code>到本地<a href="https://github.com/kaola-fed/kaola-fed.github.io.git" target="_blank" rel="external">https://github.com/kaola-fed/kaola-fed.github.io.git</a></li>
+</ol>
+<h2 id="u5F00_u59CB_u53D1_u5E03"><a href="#u5F00_u59CB_u53D1_u5E03" class="headerlink" title="开始发布"></a>开始发布</h2><ol>
+<li>在code目录下， 首先执行npm install安装依赖module，执行<code>hexo new 文章名称</code>，新建一篇文章；</li>
+<li>在source/_post目录下，找到新建的文件，编辑好文章后，执行<code>hexo server</code>，运行本地博客服务，这时候可以打开<code>http://localhost:4000</code>就可以看到新增的内容了；</li>
+<li>确认编辑好后，执行hexo generate生成静态文件，把生成的public下的静态文件拷贝到最外层文件中， 提交所有更改到master分支；</li>
+<li>等待一段时间，wercker自动部署好后， 就可以在<code>http://kaola-fed.github.io</code>看到更新了；</li>
+</ol>
+<h2 id="Refs_3A"><a href="#Refs_3A" class="headerlink" title="Refs:"></a>Refs:</h2><ul>
+<li><a href="http://wsgzao.github.io/post/hexo-guide/" target="_blank" rel="external">使用GitHub + Hexo搭建博客</a></li>
+<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo文档</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>安装<a href="https:/]]>
+    </summary>
+    
+      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
     
       <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
     
