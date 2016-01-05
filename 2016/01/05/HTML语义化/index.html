@@ -1,0 +1,788 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="html," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="网易考拉前端Team" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.0" />
+
+
+
+
+
+
+<meta name="description" content="面试的时候，我有时候会问面试者 你对HTML语义化的理解 这样一题。我期待的回答起码包括：什么是语义化 ，为什么要语义化或者语义化有什么作用这样两部分，如果能举一些语义化标签的使用场景就更完美了。对HTML标签语义化的理解和实践，作为我们每个前端攻城狮的一个必备技能和自我要求，好么？
+语义化 What + Why
+语义化是前端开发里面的一个专用术语，其优点在于标签语义化有助于构架良好的html结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTML语义化">
+<meta property="og:url" content="http://yoursite.com/2016/01/05/HTML语义化/index.html">
+<meta property="og:site_name" content="网易考拉前端Team">
+<meta property="og:description" content="面试的时候，我有时候会问面试者 你对HTML语义化的理解 这样一题。我期待的回答起码包括：什么是语义化 ，为什么要语义化或者语义化有什么作用这样两部分，如果能举一些语义化标签的使用场景就更完美了。对HTML标签语义化的理解和实践，作为我们每个前端攻城狮的一个必备技能和自我要求，好么？
+语义化 What + Why
+语义化是前端开发里面的一个专用术语，其优点在于标签语义化有助于构架良好的html结构">
+<meta property="og:image" content="http://yoursite.com/../../../../uploads/images/html1.png">
+<meta property="og:image" content="http://yoursite.com/../../../../uploads/images/html2.png">
+<meta property="og:image" content="http://yoursite.com/../../../../uploads/images/html3.png">
+<meta property="og:updated_time" content="2016-01-05T14:07:49.091Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTML语义化">
+<meta name="twitter:description" content="面试的时候，我有时候会问面试者 你对HTML语义化的理解 这样一题。我期待的回答起码包括：什么是语义化 ，为什么要语义化或者语义化有什么作用这样两部分，如果能举一些语义化标签的使用场景就更完美了。对HTML标签语义化的理解和实践，作为我们每个前端攻城狮的一个必备技能和自我要求，好么？
+语义化 What + Why
+语义化是前端开发里面的一个专用术语，其优点在于标签语义化有助于构架良好的html结构">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: '[object Object]',
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> HTML语义化 | 网易考拉前端Team </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">网易考拉前端Team</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                HTML语义化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T21:25:43+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/HTML语义化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/HTML语义化/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>面试的时候，我有时候会问面试者 <strong>你对HTML语义化的理解</strong> 这样一题。我期待的回答起码包括：什么是语义化 ，为什么要语义化或者语义化有什么作用这样两部分，如果能举一些语义化标签的使用场景就更完美了。对HTML标签语义化的理解和实践，作为我们每个前端攻城狮的一个必备技能和自我要求，好么？</em></p>
+<h3 id="u8BED_u4E49_u5316_What_+_Why"><a href="#u8BED_u4E49_u5316_What_+_Why" class="headerlink" title="语义化 What + Why"></a>语义化 <code>What + Why</code></h3><blockquote>
+<p>语义化是前端开发里面的一个专用术语，其优点在于标签语义化有助于构架良好的html结构，有利于搜索引擎的建立索引、抓取；另外，亦有利于页面在不同的设备上显示尽可能相同；此外，亦有利于构建清晰的机构，有利于团队的开发、维护。    —— <a href="https://zh.wikipedia.org/wiki/%E8%AF%AD%E4%B9%89%E5%8C%96" target="_blank" rel="external">维基百科</a></p>
+</blockquote>
+<p>以上，很官方的解释，而且重点在说标签语义化的作用了。<br>其实，通俗的说，语义化就是用正确的<strong>标签</strong>做正确的事情，表达正确的意思。浏览器很包容，即使你用非语义的标签，再用CSS披上一层外衣，也可以达到语义标签的效果，但这样真的好么？当然不好！<br>首先，我们写的代码<strong>不是只给你自己看的</strong>。通篇DIV标签，你考虑过小伙伴们的感受么？有时候维护别人的代码，比推倒重写更难受，没错，就是难受。一份好的HTML代码，应该是正确嵌套、语义明确、结构清晰、合理缩进加必要的注释。<br>再者，我们写的代码除了给用户看到最终的效果，<strong>也要让机器能更好的识别</strong>。 最重要的就是要对搜索引擎友好，尤其做电商类网站，<em>SEO</em>更为重要，好的排名能给网站带来更多流量。另外还有针对有视觉障碍的用户使用的屏幕阅读器，也要考虑到web可访问性<a href="http://www.w3.org/standards/webdesign/accessibility" target="_blank" rel="external">Web Accessibility</a>。</p>
+<p>如果用对了标签，即使有一天你的网页<strong>裸奔</strong>了，在没有CCS的情况下，也能以一定的文档格式显示（浏览器对各个标签都有默认的样式），并且是容易阅读的。编写网页代码的时候，要从设计稿（视觉稿or交互稿）中明确语义，是标题就用<code>h1-h6</code>，是段落就用<code>p</code>，是列表就该考虑用<code>ul+li</code>、<code>ol+li</code>或<code>dl+dt+dd</code>…</p>
+<h3 id="u8BED_u4E49_u5316_u5B9E_u6218"><a href="#u8BED_u4E49_u5316_u5B9E_u6218" class="headerlink" title="语义化实战"></a>语义化实战</h3><p>想要用对标签，先要理解标签：<a href="http://www.w3school.com.cn/tags/index.asp" target="_blank" rel="external">HTML标签大全</a> 。</p>
+<p><img src="/../../../../uploads/images/html1.png" alt="image"></p>
+<hr>
+<p><strong>图标</strong>：适合放图标的标签（行内标签且简短）（不考虑兼容性，可以用before | after伪元素）<br>    | 标签       |     描述         |<br>    | :——–   | ——–   |<br>    | b            |定义粗体字    |<br>    | i         |定义斜体字    |<br>    | em        |定义强调文本   |<br>    | span        |定义文档中的节 |</p>
+<p><strong>按钮</strong>：如果是表单中的按钮，推荐<code>button</code>或<code>input</code>并设置type属性，其他情况也可以用<code>a</code>、<code>b</code>等行内标签模拟按钮<br><strong>图片</strong>：<code>img</code>标签，注意设置<code>alt</code>属性<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"/images/demo.png"</span> <span class="attribute">alt</span>=<span class="value">"demo展示"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果图片中包含了重要信息，最好也写到标签里再用样式隐藏掉。比如考拉的商品详情页，商品信息都是图片来展示的，这对seo很不利，应该把图片中重要的信息写到标签里并且隐藏掉，图片不能完全替代网页元素，这也是应该养成的习惯。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"/images/goodinfo.png"</span> <span class="attribute">alt</span>=<span class="value">"商品信息"</span> /&gt;</span> </span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">style</span>=<span class="value">"display:none;"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span>&gt;</span>此处展示图片中的信息<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>图片新标签</strong>：<code>figure</code> 属于 html5，语义是文档中的插图<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">figure</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span>黄浦江上的的卢浦大桥<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"shanghai_lupu_bridge.jpg"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">figure</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>表单</strong>：整个结构是个完整的表单语义，要用<code>form</code>标签，登录|注册表单、完善信息表单、消息发送表单等等。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">""</span> <span class="attribute">method</span>=<span class="value">""</span> <span class="attribute">class</span>=<span class="value">"m-loginfm"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">"account"</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"account"</span> <span class="attribute">id</span>=<span class="value">"account"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"button"</span>&gt;</span>登录<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"/register"</span>&gt;</span>去注册<span class="tag">&lt;/<span class="title">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">p</span>&gt;</span>	</span><br><span class="line"><span class="tag">&lt;/<span class="title">form</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>表格</strong>：大型的数据表格用table，一些形似表格非严格意义上的表格可以用别的标签加样式来实现，因为表格本身渲染耗性能，而且结构比较深，样式也不够灵活。比较完整的表格结构：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">table</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">caption</span>&gt;</span>Monthly savings<span class="tag">&lt;/<span class="title">caption</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">thead</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">th</span>&gt;</span>Month<span class="tag">&lt;/<span class="title">th</span>&gt;</span><span class="tag">&lt;<span class="title">th</span>&gt;</span>Savings<span class="tag">&lt;/<span class="title">th</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">thead</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">tfoot</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>Sum<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>$180<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">tfoot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">tbody</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>5月<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>$120<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>6月<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>$60<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">tbody</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">table</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>列表</strong>：无序列表（<code>ul &gt; li</code>）、有序列表（<code>ol &gt; li</code>）、定义列表（<code>dl &gt; dt + dd</code>），不要嵌套错误<br><img src="/../../../../uploads/images/html2.png" alt="image"></p>
+<ul>
+<li><strong>html5新标签</strong>：移动端开发可以大胆用起来，PC端兼容方案：</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--[if lt IE 9]&gt;</span><br><span class="line">&lt;script type="text/javascript"&gt;</span><br><span class="line">var html5 = "abbr,article,aside,audio,canvas,datalist,details,dialog,eventsource,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video".split(','),i = html5.length;</span><br><span class="line">while(i--) document.createElement(html5[i]);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;![endif]--&gt;</span></span><br></pre></td></tr></table></figure>
+<p>html5的布局标签</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">标签</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">header</td>
+<td>定义页眉</td>
+</tr>
+<tr>
+<td style="text-align:left">footer</td>
+<td>定义页脚</td>
+</tr>
+<tr>
+<td style="text-align:left">section</td>
+<td>定义节</td>
+</tr>
+<tr>
+<td style="text-align:left">article</td>
+<td>定义文章</td>
+</tr>
+<tr>
+<td style="text-align:left">aside</td>
+<td>定义页面内容之外的内容</td>
+</tr>
+<tr>
+<td style="text-align:left">nav</td>
+<td>定义导航链接</td>
+</tr>
+</tbody>
+</table>
+<p><img src="/../../../../uploads/images/html3.png" alt="image"></p>
+<hr>
+<p>最后，让HTML语义化镌刻进我们前端开发者的基因里，让书写正确的标签，成为下意识的行为。</p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/html/" rel="tag">#html</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/05/JS中的事件循环与定时器/" rel="next" title="JS中的事件循环与定时器">
+                <i class="fa fa-chevron-left"></i> JS中的事件循环与定时器
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/01/05/HTML语义化/"
+           data-title="HTML语义化" data-url="http://yoursite.com/2016/01/05/HTML语义化/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/images/avatar.png?v=3&s=460"
+               alt="前端团队" />
+          <p class="site-author-name" itemprop="name">前端团队</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BED_u4E49_u5316_What_+_Why"><span class="nav-number">1.</span> <span class="nav-text">语义化 What + Why</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BED_u4E49_u5316_u5B9E_u6218"><span class="nav-number">2.</span> <span class="nav-text">语义化实战</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端团队</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.0"></script>
+
+
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"your-duoshuo-shortname"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

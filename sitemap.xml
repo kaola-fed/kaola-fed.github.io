@@ -2,28 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2015/12/24/impress.js%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A/</loc>
-    <lastmod>2015-12-24T02:17:48.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2015/12/23/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/</loc>
-    <lastmod>2015-12-23T06:42:46.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2015/12/23/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/</loc>
-    <lastmod>2015-12-23T06:42:46.000Z</lastmod>
+    <loc>http://yoursite.com/2016/01/05/HTML%E8%AF%AD%E4%B9%89%E5%8C%96/</loc>
+    <lastmod>2016-01-05T14:07:49.091Z</lastmod>
   </url>
   
   <url>
     <loc>http://yoursite.com/tags/index.html</loc>
-    <lastmod>2015-12-23T06:42:46.000Z</lastmod>
+    <lastmod>2016-01-05T13:21:39.807Z</lastmod>
   </url>
   
   <url>
     <loc>http://yoursite.com/categories/index.html</loc>
-    <lastmod>2015-12-23T06:42:46.000Z</lastmod>
+    <lastmod>2016-01-05T13:21:39.806Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/01/05/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/</loc>
+    <lastmod>2016-01-05T13:21:39.804Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/01/05/impress.js%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A/</loc>
+    <lastmod>2016-01-05T13:21:39.802Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/01/05/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/</loc>
+    <lastmod>2016-01-05T13:21:39.799Z</lastmod>
   </url>
   
 </urlset>
