@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2016-01-05T14:07:49.091Z</updated>
+  <updated>2016-01-14T09:14:26.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,11 +15,102 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[事件循环->布局颠簸->动画性能]]></title>
+    <link href="http://yoursite.com/2016/01/14/%E5%B8%83%E5%B1%80%E9%A2%A0%E7%B0%B8/"/>
+    <id>http://yoursite.com/2016/01/14/布局颠簸/</id>
+    <published>2016-01-14T08:57:06.000Z</published>
+    <updated>2016-01-14T09:14:26.000Z</updated>
+    <content type="html"><![CDATA[<!--# 事件循环->布局颠簸->动画性能-->
+<blockquote>
+<p><a href="http://tianyn1990.github.io" target="_blank" rel="external">tianyn1990</a></p>
+</blockquote>
+<h2 id="u4E00_u3001_u4E8B_u4EF6_u5FAA_u73AF_26amp_3B_u5B9A_u65F6_u5668"><a href="#u4E00_u3001_u4E8B_u4EF6_u5FAA_u73AF_26amp_3B_u5B9A_u65F6_u5668" class="headerlink" title="一、事件循环&amp;定时器"></a>一、事件循环&amp;定时器</h2><p><strong>事件循环（Event Loop）</strong> 是指浏览器通过不断循环检查任务队列，使单线程的javascript语言执行异步任务的过程 <a href="http://kaola-fed.github.io/2016/01/05/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/" target="_blank" rel="external">文章链接</a></p>
+<ol>
+<li><p>上文的两张图</p>
+</li>
+<li><p>「定时器-问题三」、「requestAnimationFrame」：如果浏览器性能不佳，setTimeout发生跳帧（其实就算浏览器性能良好也会发生跳帧，不可避免），Raf会造成动画变慢</p>
+</li>
+<li><p>下文我们重点探讨的动画都是js动画</p>
+</li>
+<li><p>既然css3动画又快又好，还用js动画（包括svg）干嘛？原因大概包括如下一些：</p>
+<ul>
+<li>css动画不能完全被js控制</li>
+<li>贝塞尔动画有局限（duang…duang..duang.duangduang）</li>
+<li>让css做个飞入购物车的抛物线？（同上2条）</li>
+<li>让css控制滚动条？（css只能改样式，不能控制浏览器行为）</li>
+<li>css会与js/html耦合</li>
+<li>大量使用GPU硬件加速，浏览器会高负荷运转</li>
+<li>GPU与CPU数据传输也需要时间</li>
+<li>兼容：IE10以下的浏览器不支持transition。而目前 IE8 和 IE9 还是很流行的</li>
+<li>传闻js动画经过良好优化后性能反而可超css3，见<a href="http://zencode.in/19.CSS-vs-JS%E5%8A%A8%E7%94%BB%EF%BC%9A%E8%B0%81%E6%9B%B4%E5%BF%AB%EF%BC%9F.html" target="_blank" rel="external">js动画库velocity.js作者文章，译文</a></li>
+<li>使用velocity.js的js动画举例 <a href="http://julian.com/research/velocity/demo.html" target="_blank" rel="external">demo</a> <a href="http://danielraftery.com/lib/sandbox/animated-town/" target="_blank" rel="external">demo2</a></li>
+</ul>
+</li>
+</ol>
+<p>当然，如果开发简单动画效果，css3仍是高性能的原生支持方案</p>
+<p><strong>补充：css3动画的回调</strong>：</p>
+<p>Raf虽然在保证了「浏览器刷新频率和DOM移动频率相互同步」的问题，但由于js动画性能不良(?)以及开发难度较高(!)，我们常常使用css3标准实现动画效果。</p>
+<p>由于帧率不确定造成了动画完成时间也不确定，因此使用setTimeout(cb,delay)的方式来执行css3动画的回调函数，可能造成提前或延后，且动画的css与js也发生了耦合。</p>
+<p>因此我们可以使用<code>transitionend</code>、<code>animationstart</code>、<code>animationiteration</code>、<code>animationend</code>事件。见<a href="http://web.jobbole.com/84835/" target="_blank" rel="external">陆忠芳的早读</a></p>
+<p>至于兼容性的问题，基本上兼容transition/animation的浏览器同时也兼容对应事件，因此也不必纠结！</p>
+<h2 id="u4E8C_u3001_u5E03_u5C40_u98A0_u7C38__26amp_3B_fastDOM"><a href="#u4E8C_u3001_u5E03_u5C40_u98A0_u7C38__26amp_3B_fastDOM" class="headerlink" title="二、布局颠簸 &amp; fastDOM"></a>二、布局颠簸 &amp; fastDOM</h2><h3 id="1_u3001_u4EC0_u4E48_u662F_uFF1F"><a href="#1_u3001_u4EC0_u4E48_u662F_uFF1F" class="headerlink" title="1、什么是？"></a>1、什么是？</h3><p>需要用到上文的知识</p>
+<p>如果在同一帧中，进行了「读-写-读」的操作，就会引发布局颠簸（Layout Thrashing），举个最经典的栗子：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Read</span></span><br><span class="line"><span class="keyword">var</span> h1 = element1.clientHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Write (invalidates layout)</span></span><br><span class="line">element1.style.height = (h1 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Read (triggers layout)</span></span><br><span class="line"><span class="keyword">var</span> h2 = element2.clientHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Write (invalidates layout)</span></span><br><span class="line">element2.style.height = (h2 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br></pre></td></tr></table></figure>
+<p>当write操作发生以后，对应的布局就会失效，需要进行重新计算并reflow，浏览器原本会将这个「耗时」的操作放到下一次刷新中再统一进行一次reflow操作。</p>
+<p>而在上面的代码中，write之后接着进行了read，为了保证读取的数据是正确的，会迫使浏览器在当前这一帧中提前进行reflow，于是「布局颠簸」就产生了。</p>
+<p>如果这种事情在一帧中大量发生，那么对性能的影响是巨大的。可以参考一个例子&gt;&gt;todo:fastdom/**/aspect.html;</p>
+<p>上文中，我们了解到根据浏览器时间精度的不同，使用requestAnimationFrame所注册的一个异步任务（也就是回调函数）会在下一次浏览器检查异步任务队列的时候触发。</p>
+<p>如果这个回调进行了DOM操作，由于浏览器刷新（/repaint/layout 随便怎么称呼）一次的时间间隔一般都是1000/60ms，因此<strong>DOM操作也将在「下一帧」才能生效！</strong></p>
+<p>于是我们可以改成这样：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Read</span></span><br><span class="line"><span class="keyword">var</span> h1 = element1.clientHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Write (invalidates layout)</span></span><br><span class="line">element1.style.height = (h1 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br><span class="line"></span><br><span class="line">requestAnimationFrame(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Read</span></span><br><span class="line">    <span class="keyword">var</span> h2 = element2.clientHeight;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Write (invalidates layout)</span></span><br><span class="line">    element2.style.height = (h2 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在每一帧中，先执行所有read操作，再执行所有write操作，当有新的read操作需要发生在write之后执行时，我们将它移入到下一帧执行<br>（使用requestAnimationFrame，不兼容则用setTimeout(cb,0)）</p>
+<p>chrome也在Timeline中对强制同步操作（布局颠簸）进行了提示 <a href="http://jiongks.name/blog/devtools-five-performance-features/" target="_blank" rel="external">链接</a></p>
+<h3 id="2_u3001_u300C_u7136_u800C_u300D_u6765_u4E86"><a href="#2_u3001_u300C_u7136_u800C_u300D_u6765_u4E86" class="headerlink" title="2、「然而」来了"></a>2、「然而」来了</h3><p>然而，在现实生活中，没有人像上面那样写代码，并且：</p>
+<p>1）代码中经常读写操作穿插在一起，如果将读写操作分开，会打乱代码书写逻辑，造成程序员理解异常。还有的时候读写顺序无法改变</p>
+<p>2）代码都是按照模块解耦的，模块A在进行读操作的时候，并不知道在此时此刻的这一帧中，另一个模块X是否刚刚进行了写操作</p>
+<p>3）更重要的是，如果有多个js动画（包括svg动画）同时执行，有可能造成大量Layout Thrashing，严重影响动画性能</p>
+<h3 id="3_u3001_u5982_u4F55_u89E3_u51B3_uFF1F"><a href="#3_u3001_u5982_u4F55_u89E3_u51B3_uFF1F" class="headerlink" title="3、如何解决？"></a>3、如何解决？</h3><p>首先，对于动画来说，缓存动画元素的各种属性值，尽量在动画开始的时候进行一次读操作就可以了，一般动画都是这样做的，</p>
+<p>但需要注意的是，在链式动画过程中，前一个动画的结尾属性也需要缓存，以减少下一个动画的读操作。</p>
+<p>但这还不够，在各种非动画场景下，我们也会经常大量的操作DOM（使用jquery或nej），LT不可避免。</p>
+<p>于是类似fastDom.js这样的框架就出现了，它的原理就是利用requestAnimationFrame，将会产生LT的部分挪到下一帧中再执行，<br>而在同一帧中，先批量执行所有读操作，再批量执行写操作。</p>
+<p>具体请看：</p>
+<p>例子&gt;&gt;todo:fastdom/**/test.simple.fastdom.html;</p>
+<p>源码&gt;&gt;todo:fastdom/**/fastdom.js;</p>
+<h3 id="4_u3001_u5B9E_u9645_u8FD0_u7528fastdom"><a href="#4_u3001_u5B9E_u9645_u8FD0_u7528fastdom" class="headerlink" title="4、实际运用fastdom"></a>4、实际运用fastdom</h3><p>有个小哥在项目中用了fastdom，这里是他的<a href="https://mattandre.ws/2014/05/really-fixing-layout-thrashing/" target="_blank" rel="external">经验教训</a>。</p>
+<p>他还将这个思想运用到了组件接口的设计中。<a href="https://github.com/ftlabs/ftellipsis" target="_blank" rel="external">这个</a><br>项目尝试分离了读&amp;写的API（calc读，set写），来帮助使用者合理控制读写，但在大量使用读写时，仍无法保证不触发LT。</p>
+<p>他还遭遇了另一个问题，由于使用的是单页面app，有时候在移除一些组件的时候，组件节点直接被移除了，<br>但fastdom将DOM操作放到了一下帧，当执行的时候发现组件节点已不存在，于是报错。<br>他们最后通过实例化fastdom，并扩展了一个clear方法（取名<a href="https://github.com/orangemug/instantiable-fastdom" target="_blank" rel="external">instantiable-fastdom</a>）<br>来解决。</p>
+<p>另外fastdom在后来的版本中直接try-catch掉了这种异常。</p>
+<h2 id="u4E09_u3001_u52A8_u753B_u6027_u80FD"><a href="#u4E09_u3001_u52A8_u753B_u6027_u80FD" class="headerlink" title="三、动画性能"></a>三、动画性能</h2><p>由于只做了很少的性能测试，也没有深入了解一些动画框架的原理，因此只能总结一点简单的理解。</p>
+<h3 id="js_u52A8_u753B"><a href="#js_u52A8_u753B" class="headerlink" title="js动画"></a>js动画</h3><p>在解决布局颠簸问题，并且缓存各种状态之后，我们还有以下可能提升性能的地方：</p>
+<ol>
+<li>忽略过于微小甚至不可见的状态改变（&lt;1px）</li>
+<li>根据实际情况主动触发GPU硬件加速</li>
+<li>raf</li>
+</ol>
+<h3 id="css_u52A8_u753B"><a href="#css_u52A8_u753B" class="headerlink" title="css动画"></a>css动画</h3><p>上面虽然列举了一系列的问题，但css动画还是又快又好。</p>
+<p>在<a href="https://events.google.com/io2015/" target="_blank" rel="external">2015 Google I/0 的官方站点</a>中，<br>使用了一种被称作FLIP的原则开发动画效果<a href="https://github.com/FrontendMagazine/Works/blob/master/archive/flip-your-animation.md" target="_blank" rel="external">链接，译文</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<!--# 事件循环->布局颠簸->动画性能-->
+<blockquote>
+<p><a href="http://tianyn1990.github.io" target="_blank" rel="external">tianyn1990</a></p>
+</blockquo]]>
+    </summary>
+    
+      <category term="fastdom" scheme="http://yoursite.com/tags/fastdom/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[HTML语义化]]></title>
     <link href="http://yoursite.com/2016/01/05/HTML%E8%AF%AD%E4%B9%89%E5%8C%96/"/>
     <id>http://yoursite.com/2016/01/05/HTML语义化/</id>
     <published>2016-01-05T13:25:43.000Z</published>
-    <updated>2016-01-05T14:07:49.091Z</updated>
+    <updated>2016-01-14T08:52:39.000Z</updated>
     <content type="html"><![CDATA[<p><em>面试的时候，我有时候会问面试者 <strong>你对HTML语义化的理解</strong> 这样一题。我期待的回答起码包括：什么是语义化 ，为什么要语义化或者语义化有什么作用这样两部分，如果能举一些语义化标签的使用场景就更完美了。对HTML标签语义化的理解和实践，作为我们每个前端攻城狮的一个必备技能和自我要求，好么？</em></p>
 <h3 id="u8BED_u4E49_u5316_What_+_Why"><a href="#u8BED_u4E49_u5316_What_+_Why" class="headerlink" title="语义化 What + Why"></a>语义化 <code>What + Why</code></h3><blockquote>
 <p>语义化是前端开发里面的一个专用术语，其优点在于标签语义化有助于构架良好的html结构，有利于搜索引擎的建立索引、抓取；另外，亦有利于页面在不同的设备上显示尽可能相同；此外，亦有利于构建清晰的机构，有利于团队的开发、维护。    —— <a href="https://zh.wikipedia.org/wiki/%E8%AF%AD%E4%B9%89%E5%8C%96" target="_blank" rel="external">维基百科</a></p>
@@ -27,7 +118,7 @@
 <p>以上，很官方的解释，而且重点在说标签语义化的作用了。<br>其实，通俗的说，语义化就是用正确的<strong>标签</strong>做正确的事情，表达正确的意思。浏览器很包容，即使你用非语义的标签，再用CSS披上一层外衣，也可以达到语义标签的效果，但这样真的好么？当然不好！<br>首先，我们写的代码<strong>不是只给你自己看的</strong>。通篇DIV标签，你考虑过小伙伴们的感受么？有时候维护别人的代码，比推倒重写更难受，没错，就是难受。一份好的HTML代码，应该是正确嵌套、语义明确、结构清晰、合理缩进加必要的注释。<br>再者，我们写的代码除了给用户看到最终的效果，<strong>也要让机器能更好的识别</strong>。 最重要的就是要对搜索引擎友好，尤其做电商类网站，<em>SEO</em>更为重要，好的排名能给网站带来更多流量。另外还有针对有视觉障碍的用户使用的屏幕阅读器，也要考虑到web可访问性<a href="http://www.w3.org/standards/webdesign/accessibility" target="_blank" rel="external">Web Accessibility</a>。</p>
 <p>如果用对了标签，即使有一天你的网页<strong>裸奔</strong>了，在没有CCS的情况下，也能以一定的文档格式显示（浏览器对各个标签都有默认的样式），并且是容易阅读的。编写网页代码的时候，要从设计稿（视觉稿or交互稿）中明确语义，是标题就用<code>h1-h6</code>，是段落就用<code>p</code>，是列表就该考虑用<code>ul+li</code>、<code>ol+li</code>或<code>dl+dt+dd</code>…</p>
 <h3 id="u8BED_u4E49_u5316_u5B9E_u6218"><a href="#u8BED_u4E49_u5316_u5B9E_u6218" class="headerlink" title="语义化实战"></a>语义化实战</h3><p>想要用对标签，先要理解标签：<a href="http://www.w3school.com.cn/tags/index.asp" target="_blank" rel="external">HTML标签大全</a> 。</p>
-<p><img src="/../../../../uploads/images/html1.png" alt="image"></p>
+<p><img src="../../../../uploads/images/html1.png" alt="image"></p>
 <hr>
 <p><strong>图标</strong>：适合放图标的标签（行内标签且简短）（不考虑兼容性，可以用before | after伪元素）<br>    | 标签       |     描述         |<br>    | :——–   | ——–   |<br>    | b            |定义粗体字    |<br>    | i         |定义斜体字    |<br>    | em        |定义强调文本   |<br>    | span        |定义文档中的节 |</p>
 <p><strong>按钮</strong>：如果是表单中的按钮，推荐<code>button</code>或<code>input</code>并设置type属性，其他情况也可以用<code>a</code>、<code>b</code>等行内标签模拟按钮<br><strong>图片</strong>：<code>img</code>标签，注意设置<code>alt</code>属性<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"/images/demo.png"</span> <span class="attribute">alt</span>=<span class="value">"demo展示"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
@@ -35,7 +126,7 @@
 <p><strong>图片新标签</strong>：<code>figure</code> 属于 html5，语义是文档中的插图<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">figure</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span>黄浦江上的的卢浦大桥<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"shanghai_lupu_bridge.jpg"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">figure</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p><strong>表单</strong>：整个结构是个完整的表单语义，要用<code>form</code>标签，登录|注册表单、完善信息表单、消息发送表单等等。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">""</span> <span class="attribute">method</span>=<span class="value">""</span> <span class="attribute">class</span>=<span class="value">"m-loginfm"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">"account"</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"account"</span> <span class="attribute">id</span>=<span class="value">"account"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"button"</span>&gt;</span>登录<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"/register"</span>&gt;</span>去注册<span class="tag">&lt;/<span class="title">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">p</span>&gt;</span>	</span><br><span class="line"><span class="tag">&lt;/<span class="title">form</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p><strong>表格</strong>：大型的数据表格用table，一些形似表格非严格意义上的表格可以用别的标签加样式来实现，因为表格本身渲染耗性能，而且结构比较深，样式也不够灵活。比较完整的表格结构：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">table</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">caption</span>&gt;</span>Monthly savings<span class="tag">&lt;/<span class="title">caption</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">thead</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">th</span>&gt;</span>Month<span class="tag">&lt;/<span class="title">th</span>&gt;</span><span class="tag">&lt;<span class="title">th</span>&gt;</span>Savings<span class="tag">&lt;/<span class="title">th</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">thead</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">tfoot</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>Sum<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>$180<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">tfoot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">tbody</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>5月<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>$120<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">tr</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>6月<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;<span class="title">td</span>&gt;</span>$60<span class="tag">&lt;/<span class="title">td</span>&gt;</span><span class="tag">&lt;/<span class="title">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">tbody</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">table</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>列表</strong>：无序列表（<code>ul &gt; li</code>）、有序列表（<code>ol &gt; li</code>）、定义列表（<code>dl &gt; dt + dd</code>），不要嵌套错误<br><img src="/../../../../uploads/images/html2.png" alt="image"></p>
+<p><strong>列表</strong>：无序列表（<code>ul &gt; li</code>）、有序列表（<code>ol &gt; li</code>）、定义列表（<code>dl &gt; dt + dd</code>），不要嵌套错误<br><img src="../../../../uploads/images/html2.png" alt="image"></p>
 <ul>
 <li><strong>html5新标签</strong>：移动端开发可以大胆用起来，PC端兼容方案：</li>
 </ul>
@@ -75,7 +166,7 @@
 </tr>
 </tbody>
 </table>
-<p><img src="/../../../../uploads/images/html3.png" alt="image"></p>
+<p><img src="../../../../uploads/images/html3.png" alt="image"></p>
 <hr>
 <p>最后，让HTML语义化镌刻进我们前端开发者的基因里，让书写正确的标签，成为下意识的行为。</p>
 ]]></content>
@@ -90,156 +181,11 @@
   </entry>
   
   <entry>
-    <title><![CDATA[JS中的事件循环与定时器]]></title>
-    <link href="http://yoursite.com/2016/01/05/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/"/>
-    <id>http://yoursite.com/2016/01/05/JS中的事件循环与定时器/</id>
-    <published>2016-01-05T13:24:49.138Z</published>
-    <updated>2016-01-05T13:21:39.799Z</updated>
-    <content type="html"><![CDATA[<p><em>本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。</em> <strong>Orz</strong></p>
-<h3 id="u4E00_u3001_u5355_u7EBF_u7A0B"><a href="#u4E00_u3001_u5355_u7EBF_u7A0B" class="headerlink" title="一、单线程"></a>一、单线程</h3><p>javascript单线程执行，是由浏览器的场景决定的，避免了复杂的同步问题。HTML5提出「Web Worker」标准，允许js创建多个线程，但子线程仍受主线程控制，且不能操作DOM，js的本质未变。</p>
-<h3 id="u4E8C_u3001_u4EFB_u52A1_u961F_u5217__26amp_3B__u4E8B_u4EF6_u5FAA_u73AF"><a href="#u4E8C_u3001_u4EFB_u52A1_u961F_u5217__26amp_3B__u4E8B_u4EF6_u5FAA_u73AF" class="headerlink" title="二、任务队列 &amp; 事件循环"></a>二、任务队列 &amp; 事件循环</h3><p><img src="/../../../../uploads/images/taskqueue.png" alt="image"></p>
-<ul>
-<li><p>任务分为：<strong>同步任务（synchronous）</strong>、<strong>异步任务（asynchronous）</strong>；同步任务被放入<strong>主线程</strong>，异步任务放入<strong>任务队列（task queue）</strong>。任务队列中的异步任务一旦运行有了结果，那么会在任务队列中放置一个对应的事件，当主线程中的同步任务全部执行完毕以后，会检查任务队列，将包含对应事件的异步任务放入主线程，然后主线程会执行所有任务，执行完毕以后再次检查task queue。这样不断循环的过程就叫做<strong>「event loop」</strong>。（需要注意的是，loop的时间精度在4ms-16ms之间，oldIE会比较大，部分现代浏览器会判断pc是否外接电源来调整精确度）</p>
-</li>
-<li><p>task queue中的「事件」包括：IO设备（keypress,network events like ajax…）、鼠标点击、页面滚动等。事件被添加到主线程后，在下一个loop中执行的是该事件的「回调函数」，所以async task都有回调函数。</p>
-</li>
-<li><p>task queue是「先进先出」队列结构，首先注册的事件第一个进入主线程等待执行。但「定时器」功能还会校验该事件的时间，到达时间后的async task才进入主线程。</p>
-</li>
-</ul>
-<p><img src="/../../../../uploads/images/eventloop.png" alt="image"></p>
-<ul>
-<li>如上图，主线程的运行会产生<strong>「堆 heap」</strong>和<strong>「栈 stack」</strong>，<strong>「执行栈」</strong>（主线程）中的代码可能会通过调用「WebAPIs」在task queue中创建async task，得到结果的async task会将「回调函数」放入callback queue中，并把相应事件放入task queue中，当「执行栈」中的代码执行完毕，就会依次将task queue中所有符合时间要求（定时器）的事件放入「执行栈」中，并在下一个event loop中执行对应的「回调函数」。</li>
-</ul>
-<h3 id="u4E09_u3001_u5B9A_u65F6_u5668"><a href="#u4E09_u3001_u5B9A_u65F6_u5668" class="headerlink" title="三、定时器"></a>三、定时器</h3><h3 id="setTimeout"><a href="#setTimeout" class="headerlink" title="setTimeout"></a>setTimeout</h3><ul>
-<li><p>setTimeout 与 setInterval 实现原理一致，setTimeout(fn,0) 会将「事件」放入task queue的<strong>尾部</strong>，在<strong>下一次loop</strong>中，当「同步任务」与task queue中现有事件都执行完之后再执行。</p>
-</li>
-<li><p>setTimeout存在<strong>「时间精度问题」</strong>，至少在4ms以上，根据浏览器、设备是否插电源等有所不同，最多能达到近16ms。为了解决这个问题，加快响应速度，产生了<strong>「setImmediate API 与 setImmediate.js项目」</strong>与<strong>「requestAnimationFrame」</strong>，前者解决<strong>「触发之后，立即调用回调函数，希望延迟尽可能短」</strong>的情况，后者可以实现<strong>「流畅的JS动画」（见下文）</strong></p>
-</li>
-</ul>
-<h3 id="setInterval"><a href="#setInterval" class="headerlink" title="setInterval"></a>setInterval</h3><ul>
-<li><p>setInterval如果使用「固定步长」（间隔时间为定值），例如200ms，那么它可能会在距离js执行开始的205ms，405ms，605ms…时将「事件」放入task queue中的末尾等待执行。</p>
-</li>
-<li><h4 id="u95EE_u9898_u4E00_uFF1A"><a href="#u95EE_u9898_u4E00_uFF1A" class="headerlink" title="问题一："></a>问题一：</h4><p>如果主线程（或执行栈）中的任务与task queue中的其它任务再加上setInterval中的回调函数的总执行时间超过了「固定步长」（200ms），那么setInterval的回调函数就会「延后执行」，浏览器会保证<strong>「当任务队列中没有定时器的任何其它代码实例时，才将新的定时器添加到任务队列」</strong>，长时间运行就会产生大量「积压」在内存中待执行的函数，如果主线程终于空闲下来，那么就会立刻执行<strong>「积压」</strong>的大量函数，中间不会有任何停顿。那么真正的执行时间可能就变成了（假设主线程执行时间每loop固定为300ms）：305ms、605ms、605ms、905ms、1205ms、1205ms…就会产生<strong>「跳帧」</strong>。例子如下：（补充：<a href="https://developer.mozilla.org/zh-CN/docs/Code_snippets/Timers" target="_blank" rel="external">Date.now</a> IE9以上支持，相对new Date()来说减少创建一次对象的时间和内存）</p>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">0</span>, itv;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> <span class="title">btnclick</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	itv = setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'run:'</span>+i++);</span><br><span class="line">		<span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line">		<span class="keyword">while</span>(<span class="built_in">Date</span>.now() - start &lt; <span class="number">2000</span>) &#123;&#125;</span><br><span class="line">	&#125;, <span class="number">500</span>);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
-<p><strong>但在试验中（ff，chrome，safari），只有firefox发生了「积压」效果</strong>，具体表现为：会有几个「run:i」同时打印到控制台。推测是webkit内核对这块做了优化。如果一定要使用setInterval的话，问题一（避免事件积压）的解决办法有（摘自『javascript高级程序设计』）：<br>(1) 间隔时间使用百分比: 开始值 + (目标值 - 开始值) * （Date.now() - 开始时间）/ 时间区间；<br>(2) 使用链式setTimeout；</p>
-<ul>
-<li><h4 id="u95EE_u9898_u4E8C_uFF1A"><a href="#u95EE_u9898_u4E8C_uFF1A" class="headerlink" title="问题二："></a>问题二：</h4><p><strong>「setTimeout同样有这个问题！」</strong>通过切换标签页等操作让页面在后台运行，循环仍在继续，只是「时间间隔变长」了而已。另外，当动画发生在页面viewport可视区域以外的时候，中断动画运行，才是性能更优的选择（raf就是如此）。</p>
-</li>
-<li><h4 id="u95EE_u9898_u4E09_uFF1A"><a href="#u95EE_u9898_u4E09_uFF1A" class="headerlink" title="问题三："></a>问题三：</h4><p>在使用setTimeout制作JS动画的时候，时间间隔是不好把握的，如果假设某浏览器的渲染速率为60Hz，那么就是16又2/3毫秒渲染一次，为了匹配这个速率，我们需要确保「setTimeout中设定的时间间隔」+「回调函数执行时间」+「在显示器上绘制/改变动画的下一帧的时间」刚好等于「16 2/3ms」，假设3者相加时间为15ms，那么每10『(16 2/3) / ((16 2/3)- 15)=10』帧会多出一帧来，那么结果就是在第10帧的时候，动画函数连续执行了两次，于是动画不再平滑了…（详见<a href="https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html" target="_blank" rel="external">这篇啰嗦的文章</a>），更不要说还要考虑setTimeout的「时间精度」问题（4ms 一次 event loop，也即是最少4ms才检查一次setTimeout的时间是否达到）</p>
-</li>
-</ul>
-<h3 id="requestAnimationFrame"><a href="#requestAnimationFrame" class="headerlink" title="requestAnimationFrame"></a>requestAnimationFrame</h3><ul>
-<li><p>requestAnimationFrame 会把每一帧中的所有DOM操作集中起来，在<strong>「一次重绘或回流中就完成」</strong>，并且<strong>「重绘或回流的时间间隔紧紧跟随浏览器的刷新频率」</strong>，一般来说，这个频率为每秒60帧。</p>
-</li>
-<li><p>在隐藏或不可见的元素中，requestAnimationFrame将不会进行重绘或回流，这当然就意味着更少的的cpu，gpu和内存使用量。  </p>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">0</span>, _load = +<span class="keyword">new</span> <span class="built_in">Date</span>(), loop = <span class="number">1000</span>/<span class="number">60</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _now = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="built_in">console</span>.log(i++, (_now-_load)/loop);</span><br><span class="line">    _load = _now;</span><br><span class="line">    requestAnimationFrame(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>与setTimeout相比，requestAnimationFrame不是自己指定回调函数运行的时间，而是跟着浏览器内建的刷新频率来执行回调，这当然就能达到浏览器所能实现动画的最佳效果了。</p>
-</li>
-<li><p>但另外一方面，requestAnimationFrame的预期执行时间要比setTimeout要长，因为setTimeout的最小执行时间是由「第7点：浏览器的时间精度」决定的，但raf会跟随浏览器DOM的刷新频率来执行，理论为16 2/3ms。但是，<strong>在setTimeout中如果进行了DOM操作（尤其是产生了重绘）通常不会立即执行，而是等待浏览器内建刷新时才执行</strong>。因此对于「动画」来说的话，raf要远远比setTimeout适合得多。</p>
-</li>
-<li><p>rAF与setTimeout性能比较：（据某些人说，早期的raf性能堪忧，尤其是在手机上，反而不如setTimeout）<br><strong>macbook pro chrome 46.0.2490.86 (64-bit)：</strong><br>(1) setTimeout用时：37280ms<br>(2) raf用时：       18360ms  </p>
-</li>
-</ul>
-<p><strong>setTimeout:</strong>  </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> raf, i= <span class="number">1</span>, body = <span class="built_in">document</span>.querySelector(<span class="string">'body'</span>);</span><br><span class="line">body.innerHTML = <span class="string">'&lt;div id="sq" style="position:fixed;width:30px;height:30px;top:50px;left:50px;background:red;"&gt;&lt;/div&gt;'</span>;</span><br><span class="line"><span class="keyword">var</span> sq = <span class="built_in">document</span>.querySelector(<span class="string">"#sq"</span>);</span><br><span class="line"><span class="keyword">var</span> pause = <span class="number">10</span>;<span class="comment">//回调函数执行时间</span></span><br><span class="line"><span class="keyword">var</span> _load = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"><span class="keyword">var</span> t = <span class="number">1000</span>/<span class="number">60</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    i++;</span><br><span class="line">    sq.style.left = sq.offsetLeft + <span class="number">1</span> + <span class="string">'px'</span>;</span><br><span class="line">    <span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">Date</span>.now() - start &lt; pause) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(i == <span class="number">1000</span>)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">Date</span>.now() - _load);</span><br><span class="line">    &#125;</span><br><span class="line">    raf = setTimeout(run1, t);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stop</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    clearTimeout(raf);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//37280</span></span><br></pre></td></tr></table></figure>
-<p><strong>rAF:</strong>  </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> raf, i= <span class="number">1</span>, body = <span class="built_in">document</span>.querySelector(<span class="string">'body'</span>);</span><br><span class="line">body.innerHTML = <span class="string">'&lt;div id="sq" style="position:fixed;width:30px;height:30px;top:50px;left:50px;background:red;"&gt;&lt;/div&gt;'</span>;</span><br><span class="line"><span class="keyword">var</span> sq = <span class="built_in">document</span>.querySelector(<span class="string">"#sq"</span>);</span><br><span class="line"><span class="keyword">var</span> pause = <span class="number">10</span>;<span class="comment">//回调函数执行时间</span></span><br><span class="line"><span class="keyword">var</span> _load = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    i++;</span><br><span class="line">    sq.style.left = sq.offsetLeft + <span class="number">1</span> + <span class="string">'px'</span>;</span><br><span class="line">    <span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">Date</span>.now() - start &lt; pause) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(i == <span class="number">1000</span>)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">Date</span>.now() - _load);</span><br><span class="line">    &#125;</span><br><span class="line">    raf = requestAnimationFrame(run);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stop</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    cancelAnimationFrame(raf);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//18360</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>由于requestAnimationFrame的特性之一：会把每一帧中的所有DOM操作集中起来，在「一次重绘或回流中就完成」。因此有github项目fastdom，我会在另一篇文章中详细分析fastdom的实现思路与代码。</li>
-</ul>
-<h3 id="u56DB_u3001_u66F4_u5FEB_u7684_u5F02_u6B65_u6267_u884C"><a href="#u56DB_u3001_u66F4_u5FEB_u7684_u5F02_u6B65_u6267_u884C" class="headerlink" title="四、更快的异步执行"></a>四、更快的异步执行</h3><p><em>不是为了「动画」，而是单纯的希望最快速的执行异步回调：</em></p>
-<h4 id="u4F7F_u7528_u5F02_u6B65_u51FD_u6570_uFF1AsetTimeout_u3001raf_u3001setImmediate_uFF1A"><a href="#u4F7F_u7528_u5F02_u6B65_u51FD_u6570_uFF1AsetTimeout_u3001raf_u3001setImmediate_uFF1A" class="headerlink" title="使用异步函数：setTimeout、raf、setImmediate："></a>使用异步函数：setTimeout、raf、setImmediate：</h4><ol>
-<li>setTimeout会有「时间精度问题」，经过本地试验，chrome用时约1.5ms（连接电源）、safari用时约5ms、firefox用时约0.3ms（为何这么快…）</li>
-<li>raf会跟随浏览器内置重绘页面的频率，约60Hz，理论上平均时间为：1000/60/2ms，chrome上测试：第一次时间多在1ms内，第二次调用时间大于10ms。</li>
-<li>setImmediate：仅IE10支持，尚未成为标准。但nodeJS已经支持并推荐使用此方法。另外，github上有<a href="https://github.com/YuzuJS/setImmediate/blob/master/README.md" target="_blank" rel="external">setImmediate.js项目</a>，用其它方法实现了setImmediate功能</li>
-</ol>
-<p>测试：<br><strong>setTimeout:</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> now = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> performance ? performance.now() : +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> i = now();</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(now()-j);</span><br><span class="line">    &#125;,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">var</span> j = now();</span><br><span class="line">    <span class="built_in">console</span>.log(j-i);</span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p><strong>raf:</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> now = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> performance ? performance.now() : +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> i = now();</span><br><span class="line">requestAnimationFrame(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    requestAnimationFrame(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(now()-j);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">var</span> j = now();</span><br><span class="line">    <span class="built_in">console</span>.log(j-i);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h4 id="u5176_u5B83_u65B9_u5F0F_u5B9E_u73B0_u5F02_u6B65_u8C03_u7528_uFF1A"><a href="#u5176_u5B83_u65B9_u5F0F_u5B9E_u73B0_u5F02_u6B65_u8C03_u7528_uFF1A" class="headerlink" title="其它方式实现异步调用："></a>其它方式实现异步调用：</h4><ul>
-<li>onmessage：和iframe通信时常常会使用到onmessage方法，但是如果同一个window postMessage给自身，其实也相当于异步执行了一个function。  </li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> doSth = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, doSth, <span class="literal">true</span>);</span><br><span class="line"><span class="built_in">window</span>.postMessage(<span class="string">""</span>, <span class="string">"*"</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>另外，还可以利用script标签，实现函数异步执行（把script添加到文档也会执行onreadystatechange 但是该方法只能在IE下浏览器里使用），例如：  </li>
-</ul>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> newScript = <span class="built_in">document</span>.createElement(<span class="string">"script"</span>);</span><br><span class="line">newScript.onreadystatechange = doSth;</span><br><span class="line"><span class="built_in">document</span>.documentElement.appendChild(newScript);</span><br></pre></td></tr></table></figure>
-<p>理论上，执行回调函数的等待时间排序：<br><strong>setImmediate &lt; readystatechange &lt; onmessage &lt; setTimeout 0 &lt; requestAnimationFrame</strong></p>
-<ul>
-<li>另外，在<strong>「<a href="https://github.com/YuzuJS/setImmediate/blob/master/README.md" target="_blank" rel="external">setImmediate.js项目</a>」</strong>中说了它的实现策略，对上文进行一个有力的补充：  </li>
-</ul>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## The Tricks</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### `process.nextTick`</span></span><br><span class="line"></span><br><span class="line">In Node.js versions <span class="keyword">below</span> <span class="number">0.9</span>, `setImmediate` <span class="keyword">is</span> <span class="keyword">not</span> available, <span class="keyword">but</span> [`process.nextTick`][nextTick] <span class="keyword">is</span>—<span class="keyword">and</span> <span class="keyword">in</span> those versions, `process.nextTick` uses macrotask semantics. So, we use <span class="keyword">it</span> <span class="keyword">to</span> shim support <span class="keyword">for</span> a <span class="keyword">global</span> `setImmediate`.</span><br><span class="line"></span><br><span class="line">In Node.js <span class="number">0.9</span> <span class="keyword">and</span> <span class="keyword">above</span>, `process.nextTick` moved <span class="keyword">to</span> microtask semantics, <span class="keyword">but</span> `setImmediate` was introduced <span class="keyword">with</span> macrotask semantics, so there's no need <span class="keyword">to</span> polyfill anything.</span><br><span class="line"></span><br><span class="line">Note <span class="keyword">that</span> we check <span class="keyword">for</span> *actual* Node.js environments, <span class="keyword">not</span> emulated ones like those produced <span class="keyword">by</span> browserify <span class="keyword">or</span> similar. Such emulated environments often already include a `process.nextTick` shim <span class="keyword">that</span>'s <span class="keyword">not</span> <span class="keyword">as</span> browser-compatible <span class="keyword">as</span> setImmediate.js.</span><br><span class="line"></span><br><span class="line"><span class="comment">### `postMessage`</span></span><br><span class="line"></span><br><span class="line">In Firefox <span class="number">3</span>+, Internet Explorer <span class="number">9</span>+, all modern WebKit browsers, <span class="keyword">and</span> Opera <span class="number">9.5</span>+, [`postMessage`][postMessage] <span class="keyword">is</span> available <span class="keyword">and</span> provides a good way <span class="keyword">to</span> queue tasks <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> event loop. It's quite <span class="keyword">the</span> abuse, using a cross-document messaging protocol within <span class="keyword">the</span> same document simply <span class="keyword">to</span> <span class="keyword">get</span> access <span class="keyword">to</span> <span class="keyword">the</span> event loop task queue, <span class="keyword">but</span> <span class="keyword">until</span> there are native implementations, this <span class="keyword">is</span> <span class="keyword">the</span> best option.</span><br><span class="line"></span><br><span class="line">Note <span class="keyword">that</span> Internet Explorer <span class="number">8</span> includes a synchronous <span class="property">version</span> <span class="keyword">of</span> `postMessage`. We detect this, <span class="keyword">or</span> any other such synchronous implementation, <span class="keyword">and</span> fall <span class="keyword">back</span> <span class="keyword">to</span> another trick.</span><br><span class="line"></span><br><span class="line"><span class="comment">### `MessageChannel`</span></span><br><span class="line"></span><br><span class="line">Unfortunately, `postMessage` has completely different semantics inside web workers, <span class="keyword">and</span> so cannot be used there. So we turn <span class="keyword">to</span> [`MessageChannel`][MessageChannel], which has worse browser support, <span class="keyword">but</span> <span class="keyword">does</span> work inside a web worker.</span><br><span class="line"></span><br><span class="line"><span class="comment">### `&lt;script&gt; onreadystatechange`</span></span><br><span class="line"></span><br><span class="line">For our <span class="keyword">last</span> trick, we pull something out <span class="keyword">to</span> make things fast <span class="keyword">in</span> Internet Explorer versions <span class="number">6</span> <span class="keyword">through</span> <span class="number">8</span>: namely, creating a `&lt;<span class="keyword">script</span>&gt;` element <span class="keyword">and</span> firing our calls <span class="keyword">in</span> <span class="keyword">its</span> `onreadystatechange` event. This <span class="keyword">does</span> execute <span class="keyword">in</span> a future turn <span class="keyword">of</span> <span class="keyword">the</span> event loop, <span class="keyword">and</span> <span class="keyword">is</span> also faster than `setTimeout(…, <span class="number">0</span>)`, so hey, why <span class="keyword">not</span>?</span><br></pre></td></tr></table></figure>
-<h3 id="setImmediate_API_uFF1A_u672A_u5B8C_u5F85_u7EED_u2026"><a href="#setImmediate_API_uFF1A_u672A_u5B8C_u5F85_u7EED_u2026" class="headerlink" title="setImmediate API：未完待续…"></a>setImmediate API：未完待续…</h3><h3 id="u90E8_u5206_u53C2_u8003_u8D44_u6599_uFF1A"><a href="#u90E8_u5206_u53C2_u8003_u8D44_u6599_uFF1A" class="headerlink" title="部分参考资料："></a>部分参考资料：</h3><ol>
-<li><p>JavaScript 运行机制详解：再谈Event Loop<br><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a><br>—相关视频：Help, I’m stuck in an event-loop  <a href="https://vimeo.com/96425312" target="_blank" rel="external">https://vimeo.com/96425312</a></p>
-</li>
-<li><p>更快的异步执行<br><a href="http://www.alloyteam.com/2014/03/faster-asynchronous-execution/" target="_blank" rel="external">http://www.alloyteam.com/2014/03/faster-asynchronous-execution/</a></p>
-</li>
-<li><p>Enable REQUEST_ANIMATION_FRAME on all ports?<br><a href="https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html" target="_blank" rel="external">https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html</a></p>
-</li>
-<li><p>拥有更好性能的requesAnimationFrame<br><a href="http://sentsin.com/web/949.html" target="_blank" rel="external">http://sentsin.com/web/949.html</a></p>
-</li>
-<li><p>性能更好的js动画实现方式——requestAnimationFrame<br><a href="http://www.cnblogs.com/2050/p/3871517.html" target="_blank" rel="external">http://www.cnblogs.com/2050/p/3871517.html</a></p>
-</li>
-</ol>
-<blockquote>
-<p>by <a href="https://tianyn1990.github.io" target="_blank" rel="external">tianyn1990</a></p>
-</blockquote>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><em>本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。</em> <strong>Orz</strong></p>
-<h3 id="u4E00_u3001_u5355_u7EBF_u7A0B"><a href="#]]>
-    </summary>
-    
-      <category term="javascript" scheme="http://yoursite.com/tags/javascript/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何发表文章]]></title>
-    <link href="http://yoursite.com/2016/01/05/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"/>
-    <id>http://yoursite.com/2016/01/05/如何发布文章/</id>
-    <published>2016-01-05T13:21:39.804Z</published>
-    <updated>2016-01-05T13:21:39.804Z</updated>
-    <content type="html"><![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
-<li>安装<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo</a></li>
-<li>clone <code>kaola-fed/kaola-fed.github.io</code>到本地<a href="https://github.com/kaola-fed/kaola-fed.github.io.git" target="_blank" rel="external">https://github.com/kaola-fed/kaola-fed.github.io.git</a></li>
-</ol>
-<h2 id="u5F00_u59CB_u53D1_u5E03"><a href="#u5F00_u59CB_u53D1_u5E03" class="headerlink" title="开始发布"></a>开始发布</h2><ol>
-<li>在code目录下， 首先执行npm install安装依赖module，执行<code>hexo new 文章名称</code>，新建一篇文章；</li>
-<li>在source/_post目录下，找到新建的文件，编辑好文章后，执行<code>hexo server</code>，运行本地博客服务，这时候可以打开<code>http://localhost:4000</code>就可以看到新增的内容了；</li>
-<li>确认编辑好后，执行hexo generate生成静态文件，把生成的public下的静态文件拷贝到最外层文件中， 提交所有更改到master分支；</li>
-<li>等待一段时间，wercker自动部署好后， 就可以在<code>http://kaola-fed.github.io</code>看到更新了；</li>
-</ol>
-<h2 id="Refs_3A"><a href="#Refs_3A" class="headerlink" title="Refs:"></a>Refs:</h2><ul>
-<li><a href="http://wsgzao.github.io/post/hexo-guide/" target="_blank" rel="external">使用GitHub + Hexo搭建博客</a></li>
-<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo文档</a></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
-<li>安装<a href="https:/]]>
-    </summary>
-    
-      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
-    
-      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[impress.js 调研报告]]></title>
-    <link href="http://yoursite.com/2016/01/05/impress.js%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A/"/>
-    <id>http://yoursite.com/2016/01/05/impress.js调研报告/</id>
-    <published>2016-01-05T13:21:39.802Z</published>
-    <updated>2016-01-05T13:21:39.802Z</updated>
+    <link href="http://yoursite.com/2015/12/24/impress.js%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A/"/>
+    <id>http://yoursite.com/2015/12/24/impress.js调研报告/</id>
+    <published>2015-12-24T02:17:48.000Z</published>
+    <updated>2015-12-24T02:17:48.000Z</updated>
     <content type="html"><![CDATA[<p>在开始阅读本文之前，你至少应该打开官网的<a href="http://impress.github.io/impress.js" target="_blank" rel="external">例子</a>看看，并且<a href="https://github.com/stefina/impressJS" target="_blank" rel="external">下载代码</a>到本地跑跑 :-)</p>
 <p>在阅读过程中，强烈建议阅读的同时不断查看源码，不断对照官网提供的<a href="http://impress.github.io/impress.js" target="_blank" rel="external">例子</a></p>
 <h2 id="u4E00_u3001_u547D_u540D"><a href="#u4E00_u3001_u547D_u540D" class="headerlink" title="一、命名"></a>一、命名</h2><p>根据页面结构：</p>
@@ -419,7 +365,7 @@
 <p>第一层#impress需要至少需要赋予属性值perspective:<em>*</em>px，以及perspective-origin。perspective可以理解为「视距」（虽然中文意思是：透视，视角，<br>完全不明白的同学可以参考<a href="http://www.zhangxinxu.com/wordpress/?p=2592" target="_blank" rel="external">这篇</a>，或者其他优秀文章），也就是眼睛距离屏幕的距离（z轴）。<br>perspective-origin指的是眼睛的方位（x,y轴）。这两个值确定了眼睛和屏幕的三维位置关系（xyz）（不了解「眼睛」有啥作用的话请继续看下文）。</p>
 <p>第二层#canvas，顾名思义可以称作「画布」，因为所有具体展现出来的的3D元素(.step)都包含在它内部。<br>它至少必须设置样式transform-style:preserve-3d，但这个样式为了保险，一般可以设置到这3层中的所有节点上。</p>
 <p>第三层.step，它就可以有很多兄弟节点了，这些节点通过设置translate:translate3d() rotate3d() scale()等等样式来定位自己在三维环境中的位置。<br>其中最关键的就是z轴的距离（translateZ），它定义了图形距离屏幕的距离。通过这个距离，以及在#impress中设置的「眼睛」距离屏幕的距离，我们可以画一个「从眼睛到图形的锥形」，<br>而「锥形与屏幕相交」的位置就是这个.step图形在屏幕上呈现的大小了。这么说不是太具体，请看下图（要是弄成可拖动带交互效果的就好了…）：</p>
-<p><img src="/../../../../uploads/images/perspective.jpg" alt="images"></p>
+<p><img src="../../../../uploads/images/perspective.jpg" alt="images"></p>
 <p>上面两张图中的画的眼睛可以理解为观察者的位置，那面白板可以看做是电脑屏幕，眼睛到白板的距离d就是perspective的值。虚线组成的圆形就是我们希望展示到页面上的图形（impress.js中就是Page）。由这个图形和观察者的眼睛组成的「视锥」投影到屏幕（白板）上的大小，就是屏幕最终展示的图形大小。而大量图形都通过这种方式呈现到屏幕上以后，图形之间就呈现了三维的视觉联系。</p>
 <p>完整的例子可以参考我的<a href="http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html" target="_blank" rel="external">这个栗子</a>，以及<a href="http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html" target="_blank" rel="external">这个</a>，还有<a href="http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html" target="_blank" rel="external">这个</a></p>
 <h3 id="2_u3001impress-js_u7684_u5207_u6362_u52A8_u753B"><a href="#2_u3001impress-js_u7684_u5207_u6362_u52A8_u753B" class="headerlink" title="2、impress.js的切换动画"></a>2、impress.js的切换动画</h3><p>impress.js之所以这么awesome，最主要的就是各个Page之间的切换动画。每个Page都是上文中的第三层（.step），由于每个Page都会根据设置的各种属性值，被放置在三维环境中的某个位置，<br>它可能被放大、距离屏幕有一段距离、甚至xyz轴都进行了旋转，但我们必须从一个Page动态的切换到另一个Page，那么到底如何切换呢？（假设我们要从Page1切换到Page2）</p>
@@ -572,6 +518,151 @@
     </summary>
     
       <category term="impress" scheme="http://yoursite.com/tags/impress/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何发表文章]]></title>
+    <link href="http://yoursite.com/2015/12/23/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"/>
+    <id>http://yoursite.com/2015/12/23/如何发布文章/</id>
+    <published>2015-12-23T06:42:46.000Z</published>
+    <updated>2015-12-23T06:42:46.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>安装<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo</a></li>
+<li>clone <code>kaola-fed/kaola-fed.github.io</code>到本地<a href="https://github.com/kaola-fed/kaola-fed.github.io.git" target="_blank" rel="external">https://github.com/kaola-fed/kaola-fed.github.io.git</a></li>
+</ol>
+<h2 id="u5F00_u59CB_u53D1_u5E03"><a href="#u5F00_u59CB_u53D1_u5E03" class="headerlink" title="开始发布"></a>开始发布</h2><ol>
+<li>在code目录下， 首先执行npm install安装依赖module，执行<code>hexo new 文章名称</code>，新建一篇文章；</li>
+<li>在source/_post目录下，找到新建的文件，编辑好文章后，执行<code>hexo server</code>，运行本地博客服务，这时候可以打开<code>http://localhost:4000</code>就可以看到新增的内容了；</li>
+<li>确认编辑好后，执行hexo generate生成静态文件，把生成的public下的静态文件拷贝到最外层文件中， 提交所有更改到master分支；</li>
+<li>等待一段时间，wercker自动部署好后， 就可以在<code>http://kaola-fed.github.io</code>看到更新了；</li>
+</ol>
+<h2 id="Refs_3A"><a href="#Refs_3A" class="headerlink" title="Refs:"></a>Refs:</h2><ul>
+<li><a href="http://wsgzao.github.io/post/hexo-guide/" target="_blank" rel="external">使用GitHub + Hexo搭建博客</a></li>
+<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo文档</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>安装<a href="https:/]]>
+    </summary>
+    
+      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
+    
+      <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[JS中的事件循环与定时器]]></title>
+    <link href="http://yoursite.com/2015/12/23/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/"/>
+    <id>http://yoursite.com/2015/12/23/JS中的事件循环与定时器/</id>
+    <published>2015-12-23T06:42:46.000Z</published>
+    <updated>2015-12-23T06:42:46.000Z</updated>
+    <content type="html"><![CDATA[<p><em>本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。</em> <strong>Orz</strong></p>
+<h3 id="u4E00_u3001_u5355_u7EBF_u7A0B"><a href="#u4E00_u3001_u5355_u7EBF_u7A0B" class="headerlink" title="一、单线程"></a>一、单线程</h3><p>javascript单线程执行，是由浏览器的场景决定的，避免了复杂的同步问题。HTML5提出「Web Worker」标准，允许js创建多个线程，但子线程仍受主线程控制，且不能操作DOM，js的本质未变。</p>
+<h3 id="u4E8C_u3001_u4EFB_u52A1_u961F_u5217__26amp_3B__u4E8B_u4EF6_u5FAA_u73AF"><a href="#u4E8C_u3001_u4EFB_u52A1_u961F_u5217__26amp_3B__u4E8B_u4EF6_u5FAA_u73AF" class="headerlink" title="二、任务队列 &amp; 事件循环"></a>二、任务队列 &amp; 事件循环</h3><p><img src="../../../../uploads/images/taskqueue.png" alt="image"></p>
+<ul>
+<li><p>任务分为：<strong>同步任务（synchronous）</strong>、<strong>异步任务（asynchronous）</strong>；同步任务被放入<strong>主线程</strong>，异步任务放入<strong>任务队列（task queue）</strong>。任务队列中的异步任务一旦运行有了结果，那么会在任务队列中放置一个对应的事件，当主线程中的同步任务全部执行完毕以后，会检查任务队列，将包含对应事件的异步任务放入主线程，然后主线程会执行所有任务，执行完毕以后再次检查task queue。这样不断循环的过程就叫做<strong>「event loop」</strong>。（需要注意的是，loop的时间精度在4ms-16ms之间，oldIE会比较大，部分现代浏览器会判断pc是否外接电源来调整精确度）</p>
+</li>
+<li><p>task queue中的「事件」包括：IO设备（keypress,network events like ajax…）、鼠标点击、页面滚动等。事件被添加到主线程后，在下一个loop中执行的是该事件的「回调函数」，所以async task都有回调函数。</p>
+</li>
+<li><p>task queue是「先进先出」队列结构，首先注册的事件第一个进入主线程等待执行。但「定时器」功能还会校验该事件的时间，到达时间后的async task才进入主线程。</p>
+</li>
+</ul>
+<p><img src="../../../../uploads/images/eventloop.png" alt="image"></p>
+<ul>
+<li>如上图，主线程的运行会产生<strong>「堆 heap」</strong>和<strong>「栈 stack」</strong>，<strong>「执行栈」</strong>（主线程）中的代码可能会通过调用「WebAPIs」在task queue中创建async task，得到结果的async task会将「回调函数」放入callback queue中，并把相应事件放入task queue中，当「执行栈」中的代码执行完毕，就会依次将task queue中所有符合时间要求（定时器）的事件放入「执行栈」中，并在下一个event loop中执行对应的「回调函数」。</li>
+</ul>
+<h3 id="u4E09_u3001_u5B9A_u65F6_u5668"><a href="#u4E09_u3001_u5B9A_u65F6_u5668" class="headerlink" title="三、定时器"></a>三、定时器</h3><h3 id="setTimeout"><a href="#setTimeout" class="headerlink" title="setTimeout"></a>setTimeout</h3><ul>
+<li><p>setTimeout 与 setInterval 实现原理一致，setTimeout(fn,0) 会将「事件」放入task queue的<strong>尾部</strong>，在<strong>下一次loop</strong>中，当「同步任务」与task queue中现有事件都执行完之后再执行。</p>
+</li>
+<li><p>setTimeout存在<strong>「时间精度问题」</strong>，至少在4ms以上，根据浏览器、设备是否插电源等有所不同，最多能达到近16ms。为了解决这个问题，加快响应速度，产生了<strong>「setImmediate API 与 setImmediate.js项目」</strong>与<strong>「requestAnimationFrame」</strong>，前者解决<strong>「触发之后，立即调用回调函数，希望延迟尽可能短」</strong>的情况，后者可以实现<strong>「流畅的JS动画」（见下文）</strong></p>
+</li>
+</ul>
+<h3 id="setInterval"><a href="#setInterval" class="headerlink" title="setInterval"></a>setInterval</h3><ul>
+<li><p>setInterval如果使用「固定步长」（间隔时间为定值），例如200ms，那么它可能会在距离js执行开始的205ms，405ms，605ms…时将「事件」放入task queue中的末尾等待执行。</p>
+</li>
+<li><h4 id="u95EE_u9898_u4E00_uFF1A"><a href="#u95EE_u9898_u4E00_uFF1A" class="headerlink" title="问题一："></a>问题一：</h4><p>如果主线程（或执行栈）中的任务与task queue中的其它任务再加上setInterval中的回调函数的总执行时间超过了「固定步长」（200ms），那么setInterval的回调函数就会「延后执行」，浏览器会保证<strong>「当任务队列中没有定时器的任何其它代码实例时，才将新的定时器添加到任务队列」</strong>，长时间运行就会产生大量「积压」在内存中待执行的函数，如果主线程终于空闲下来，那么就会立刻执行<strong>「积压」</strong>的大量函数，中间不会有任何停顿。那么真正的执行时间可能就变成了（假设主线程执行时间每loop固定为300ms）：305ms、605ms、605ms、905ms、1205ms、1205ms…就会产生<strong>「跳帧」</strong>。例子如下：（补充：<a href="https://developer.mozilla.org/zh-CN/docs/Code_snippets/Timers" target="_blank" rel="external">Date.now</a> IE9以上支持，相对new Date()来说减少创建一次对象的时间和内存）</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">0</span>, itv;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> <span class="title">btnclick</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	itv = setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'run:'</span>+i++);</span><br><span class="line">		<span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line">		<span class="keyword">while</span>(<span class="built_in">Date</span>.now() - start &lt; <span class="number">2000</span>) &#123;&#125;</span><br><span class="line">	&#125;, <span class="number">500</span>);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p><strong>但在试验中（ff，chrome，safari），只有firefox发生了「积压」效果</strong>，具体表现为：会有几个「run:i」同时打印到控制台。推测是webkit内核对这块做了优化。如果一定要使用setInterval的话，问题一（避免事件积压）的解决办法有（摘自『javascript高级程序设计』）：<br>(1) 间隔时间使用百分比: 开始值 + (目标值 - 开始值) * （Date.now() - 开始时间）/ 时间区间；<br>(2) 使用链式setTimeout；</p>
+<ul>
+<li><h4 id="u95EE_u9898_u4E8C_uFF1A"><a href="#u95EE_u9898_u4E8C_uFF1A" class="headerlink" title="问题二："></a>问题二：</h4><p><strong>「setTimeout同样有这个问题！」</strong>通过切换标签页等操作让页面在后台运行，循环仍在继续，只是「时间间隔变长」了而已。另外，当动画发生在页面viewport可视区域以外的时候，中断动画运行，才是性能更优的选择（raf就是如此）。</p>
+</li>
+<li><h4 id="u95EE_u9898_u4E09_uFF1A"><a href="#u95EE_u9898_u4E09_uFF1A" class="headerlink" title="问题三："></a>问题三：</h4><p>在使用setTimeout制作JS动画的时候，时间间隔是不好把握的，如果假设某浏览器的渲染速率为60Hz，那么就是16又2/3毫秒渲染一次，为了匹配这个速率，我们需要确保「setTimeout中设定的时间间隔」+「回调函数执行时间」+「在显示器上绘制/改变动画的下一帧的时间」刚好等于「16 2/3ms」，假设3者相加时间为15ms，那么每10『(16 2/3) / ((16 2/3)- 15)=10』帧会多出一帧来，那么结果就是在第10帧的时候，动画函数连续执行了两次，于是动画不再平滑了…（详见<a href="https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html" target="_blank" rel="external">这篇啰嗦的文章</a>），更不要说还要考虑setTimeout的「时间精度」问题（4ms 一次 event loop，也即是最少4ms才检查一次setTimeout的时间是否达到）</p>
+</li>
+</ul>
+<h3 id="requestAnimationFrame"><a href="#requestAnimationFrame" class="headerlink" title="requestAnimationFrame"></a>requestAnimationFrame</h3><ul>
+<li><p>requestAnimationFrame 会把每一帧中的所有DOM操作集中起来，在<strong>「一次重绘或回流中就完成」</strong>，并且<strong>「重绘或回流的时间间隔紧紧跟随浏览器的刷新频率」</strong>，一般来说，这个频率为每秒60帧。</p>
+</li>
+<li><p>在隐藏或不可见的元素中，requestAnimationFrame将不会进行重绘或回流，这当然就意味着更少的的cpu，gpu和内存使用量。  </p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">0</span>, _load = +<span class="keyword">new</span> <span class="built_in">Date</span>(), loop = <span class="number">1000</span>/<span class="number">60</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _now = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="built_in">console</span>.log(i++, (_now-_load)/loop);</span><br><span class="line">    _load = _now;</span><br><span class="line">    requestAnimationFrame(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>与setTimeout相比，requestAnimationFrame不是自己指定回调函数运行的时间，而是跟着浏览器内建的刷新频率来执行回调，这当然就能达到浏览器所能实现动画的最佳效果了。</p>
+</li>
+<li><p>但另外一方面，requestAnimationFrame的预期执行时间要比setTimeout要长，因为setTimeout的最小执行时间是由「第7点：浏览器的时间精度」决定的，但raf会跟随浏览器DOM的刷新频率来执行，理论为16 2/3ms。但是，<strong>在setTimeout中如果进行了DOM操作（尤其是产生了重绘）通常不会立即执行，而是等待浏览器内建刷新时才执行</strong>。因此对于「动画」来说的话，raf要远远比setTimeout适合得多。</p>
+</li>
+<li><p>rAF与setTimeout性能比较：（据某些人说，早期的raf性能堪忧，尤其是在手机上，反而不如setTimeout）<br><strong>macbook pro chrome 46.0.2490.86 (64-bit)：</strong><br>(1) setTimeout用时：37280ms<br>(2) raf用时：       18360ms  </p>
+</li>
+</ul>
+<p><strong>setTimeout:</strong>  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> raf, i= <span class="number">1</span>, body = <span class="built_in">document</span>.querySelector(<span class="string">'body'</span>);</span><br><span class="line">body.innerHTML = <span class="string">'&lt;div id="sq" style="position:fixed;width:30px;height:30px;top:50px;left:50px;background:red;"&gt;&lt;/div&gt;'</span>;</span><br><span class="line"><span class="keyword">var</span> sq = <span class="built_in">document</span>.querySelector(<span class="string">"#sq"</span>);</span><br><span class="line"><span class="keyword">var</span> pause = <span class="number">10</span>;<span class="comment">//回调函数执行时间</span></span><br><span class="line"><span class="keyword">var</span> _load = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"><span class="keyword">var</span> t = <span class="number">1000</span>/<span class="number">60</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    i++;</span><br><span class="line">    sq.style.left = sq.offsetLeft + <span class="number">1</span> + <span class="string">'px'</span>;</span><br><span class="line">    <span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">Date</span>.now() - start &lt; pause) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(i == <span class="number">1000</span>)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">Date</span>.now() - _load);</span><br><span class="line">    &#125;</span><br><span class="line">    raf = setTimeout(run1, t);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stop</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    clearTimeout(raf);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//37280</span></span><br></pre></td></tr></table></figure>
+<p><strong>rAF:</strong>  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> raf, i= <span class="number">1</span>, body = <span class="built_in">document</span>.querySelector(<span class="string">'body'</span>);</span><br><span class="line">body.innerHTML = <span class="string">'&lt;div id="sq" style="position:fixed;width:30px;height:30px;top:50px;left:50px;background:red;"&gt;&lt;/div&gt;'</span>;</span><br><span class="line"><span class="keyword">var</span> sq = <span class="built_in">document</span>.querySelector(<span class="string">"#sq"</span>);</span><br><span class="line"><span class="keyword">var</span> pause = <span class="number">10</span>;<span class="comment">//回调函数执行时间</span></span><br><span class="line"><span class="keyword">var</span> _load = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    i++;</span><br><span class="line">    sq.style.left = sq.offsetLeft + <span class="number">1</span> + <span class="string">'px'</span>;</span><br><span class="line">    <span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">Date</span>.now() - start &lt; pause) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(i == <span class="number">1000</span>)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">Date</span>.now() - _load);</span><br><span class="line">    &#125;</span><br><span class="line">    raf = requestAnimationFrame(run);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stop</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    cancelAnimationFrame(raf);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//18360</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>由于requestAnimationFrame的特性之一：会把每一帧中的所有DOM操作集中起来，在「一次重绘或回流中就完成」。因此有github项目fastdom，我会在另一篇文章中详细分析fastdom的实现思路与代码。</li>
+</ul>
+<h3 id="u56DB_u3001_u66F4_u5FEB_u7684_u5F02_u6B65_u6267_u884C"><a href="#u56DB_u3001_u66F4_u5FEB_u7684_u5F02_u6B65_u6267_u884C" class="headerlink" title="四、更快的异步执行"></a>四、更快的异步执行</h3><p><em>不是为了「动画」，而是单纯的希望最快速的执行异步回调：</em></p>
+<h4 id="u4F7F_u7528_u5F02_u6B65_u51FD_u6570_uFF1AsetTimeout_u3001raf_u3001setImmediate_uFF1A"><a href="#u4F7F_u7528_u5F02_u6B65_u51FD_u6570_uFF1AsetTimeout_u3001raf_u3001setImmediate_uFF1A" class="headerlink" title="使用异步函数：setTimeout、raf、setImmediate："></a>使用异步函数：setTimeout、raf、setImmediate：</h4><ol>
+<li>setTimeout会有「时间精度问题」，经过本地试验，chrome用时约1.5ms（连接电源）、safari用时约5ms、firefox用时约0.3ms（为何这么快…）</li>
+<li>raf会跟随浏览器内置重绘页面的频率，约60Hz，理论上平均时间为：1000/60/2ms，chrome上测试：第一次时间多在1ms内，第二次调用时间大于10ms。</li>
+<li>setImmediate：仅IE10支持，尚未成为标准。但nodeJS已经支持并推荐使用此方法。另外，github上有<a href="https://github.com/YuzuJS/setImmediate/blob/master/README.md" target="_blank" rel="external">setImmediate.js项目</a>，用其它方法实现了setImmediate功能</li>
+</ol>
+<p>测试：<br><strong>setTimeout:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> now = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> performance ? performance.now() : +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> i = now();</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(now()-j);</span><br><span class="line">    &#125;,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">var</span> j = now();</span><br><span class="line">    <span class="built_in">console</span>.log(j-i);</span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>raf:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> now = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> performance ? performance.now() : +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> i = now();</span><br><span class="line">requestAnimationFrame(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    requestAnimationFrame(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(now()-j);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">var</span> j = now();</span><br><span class="line">    <span class="built_in">console</span>.log(j-i);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="u5176_u5B83_u65B9_u5F0F_u5B9E_u73B0_u5F02_u6B65_u8C03_u7528_uFF1A"><a href="#u5176_u5B83_u65B9_u5F0F_u5B9E_u73B0_u5F02_u6B65_u8C03_u7528_uFF1A" class="headerlink" title="其它方式实现异步调用："></a>其它方式实现异步调用：</h4><ul>
+<li>onmessage：和iframe通信时常常会使用到onmessage方法，但是如果同一个window postMessage给自身，其实也相当于异步执行了一个function。  </li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> doSth = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, doSth, <span class="literal">true</span>);</span><br><span class="line"><span class="built_in">window</span>.postMessage(<span class="string">""</span>, <span class="string">"*"</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>另外，还可以利用script标签，实现函数异步执行（把script添加到文档也会执行onreadystatechange 但是该方法只能在IE下浏览器里使用），例如：  </li>
+</ul>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> newScript = <span class="built_in">document</span>.createElement(<span class="string">"script"</span>);</span><br><span class="line">newScript.onreadystatechange = doSth;</span><br><span class="line"><span class="built_in">document</span>.documentElement.appendChild(newScript);</span><br></pre></td></tr></table></figure>
+<p>理论上，执行回调函数的等待时间排序：<br><strong>setImmediate &lt; readystatechange &lt; onmessage &lt; setTimeout 0 &lt; requestAnimationFrame</strong></p>
+<ul>
+<li>另外，在<strong>「<a href="https://github.com/YuzuJS/setImmediate/blob/master/README.md" target="_blank" rel="external">setImmediate.js项目</a>」</strong>中说了它的实现策略，对上文进行一个有力的补充：  </li>
+</ul>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## The Tricks</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### `process.nextTick`</span></span><br><span class="line"></span><br><span class="line">In Node.js versions <span class="keyword">below</span> <span class="number">0.9</span>, `setImmediate` <span class="keyword">is</span> <span class="keyword">not</span> available, <span class="keyword">but</span> [`process.nextTick`][nextTick] <span class="keyword">is</span>—<span class="keyword">and</span> <span class="keyword">in</span> those versions, `process.nextTick` uses macrotask semantics. So, we use <span class="keyword">it</span> <span class="keyword">to</span> shim support <span class="keyword">for</span> a <span class="keyword">global</span> `setImmediate`.</span><br><span class="line"></span><br><span class="line">In Node.js <span class="number">0.9</span> <span class="keyword">and</span> <span class="keyword">above</span>, `process.nextTick` moved <span class="keyword">to</span> microtask semantics, <span class="keyword">but</span> `setImmediate` was introduced <span class="keyword">with</span> macrotask semantics, so there's no need <span class="keyword">to</span> polyfill anything.</span><br><span class="line"></span><br><span class="line">Note <span class="keyword">that</span> we check <span class="keyword">for</span> *actual* Node.js environments, <span class="keyword">not</span> emulated ones like those produced <span class="keyword">by</span> browserify <span class="keyword">or</span> similar. Such emulated environments often already include a `process.nextTick` shim <span class="keyword">that</span>'s <span class="keyword">not</span> <span class="keyword">as</span> browser-compatible <span class="keyword">as</span> setImmediate.js.</span><br><span class="line"></span><br><span class="line"><span class="comment">### `postMessage`</span></span><br><span class="line"></span><br><span class="line">In Firefox <span class="number">3</span>+, Internet Explorer <span class="number">9</span>+, all modern WebKit browsers, <span class="keyword">and</span> Opera <span class="number">9.5</span>+, [`postMessage`][postMessage] <span class="keyword">is</span> available <span class="keyword">and</span> provides a good way <span class="keyword">to</span> queue tasks <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> event loop. It's quite <span class="keyword">the</span> abuse, using a cross-document messaging protocol within <span class="keyword">the</span> same document simply <span class="keyword">to</span> <span class="keyword">get</span> access <span class="keyword">to</span> <span class="keyword">the</span> event loop task queue, <span class="keyword">but</span> <span class="keyword">until</span> there are native implementations, this <span class="keyword">is</span> <span class="keyword">the</span> best option.</span><br><span class="line"></span><br><span class="line">Note <span class="keyword">that</span> Internet Explorer <span class="number">8</span> includes a synchronous <span class="property">version</span> <span class="keyword">of</span> `postMessage`. We detect this, <span class="keyword">or</span> any other such synchronous implementation, <span class="keyword">and</span> fall <span class="keyword">back</span> <span class="keyword">to</span> another trick.</span><br><span class="line"></span><br><span class="line"><span class="comment">### `MessageChannel`</span></span><br><span class="line"></span><br><span class="line">Unfortunately, `postMessage` has completely different semantics inside web workers, <span class="keyword">and</span> so cannot be used there. So we turn <span class="keyword">to</span> [`MessageChannel`][MessageChannel], which has worse browser support, <span class="keyword">but</span> <span class="keyword">does</span> work inside a web worker.</span><br><span class="line"></span><br><span class="line"><span class="comment">### `&lt;script&gt; onreadystatechange`</span></span><br><span class="line"></span><br><span class="line">For our <span class="keyword">last</span> trick, we pull something out <span class="keyword">to</span> make things fast <span class="keyword">in</span> Internet Explorer versions <span class="number">6</span> <span class="keyword">through</span> <span class="number">8</span>: namely, creating a `&lt;<span class="keyword">script</span>&gt;` element <span class="keyword">and</span> firing our calls <span class="keyword">in</span> <span class="keyword">its</span> `onreadystatechange` event. This <span class="keyword">does</span> execute <span class="keyword">in</span> a future turn <span class="keyword">of</span> <span class="keyword">the</span> event loop, <span class="keyword">and</span> <span class="keyword">is</span> also faster than `setTimeout(…, <span class="number">0</span>)`, so hey, why <span class="keyword">not</span>?</span><br></pre></td></tr></table></figure>
+<h3 id="setImmediate_API_uFF1A_u672A_u5B8C_u5F85_u7EED_u2026"><a href="#setImmediate_API_uFF1A_u672A_u5B8C_u5F85_u7EED_u2026" class="headerlink" title="setImmediate API：未完待续…"></a>setImmediate API：未完待续…</h3><h3 id="u90E8_u5206_u53C2_u8003_u8D44_u6599_uFF1A"><a href="#u90E8_u5206_u53C2_u8003_u8D44_u6599_uFF1A" class="headerlink" title="部分参考资料："></a>部分参考资料：</h3><ol>
+<li><p>JavaScript 运行机制详解：再谈Event Loop<br><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a><br>—相关视频：Help, I’m stuck in an event-loop  <a href="https://vimeo.com/96425312" target="_blank" rel="external">https://vimeo.com/96425312</a></p>
+</li>
+<li><p>更快的异步执行<br><a href="http://www.alloyteam.com/2014/03/faster-asynchronous-execution/" target="_blank" rel="external">http://www.alloyteam.com/2014/03/faster-asynchronous-execution/</a></p>
+</li>
+<li><p>Enable REQUEST_ANIMATION_FRAME on all ports?<br><a href="https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html" target="_blank" rel="external">https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html</a></p>
+</li>
+<li><p>拥有更好性能的requesAnimationFrame<br><a href="http://sentsin.com/web/949.html" target="_blank" rel="external">http://sentsin.com/web/949.html</a></p>
+</li>
+<li><p>性能更好的js动画实现方式——requestAnimationFrame<br><a href="http://www.cnblogs.com/2050/p/3871517.html" target="_blank" rel="external">http://www.cnblogs.com/2050/p/3871517.html</a></p>
+</li>
+</ol>
+<blockquote>
+<p>by <a href="https://tianyn1990.github.io" target="_blank" rel="external">tianyn1990</a></p>
+</blockquote>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><em>本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。</em> <strong>Orz</strong></p>
+<h3 id="u4E00_u3001_u5355_u7EBF_u7A0B"><a href="#]]>
+    </summary>
+    
+      <category term="javascript" scheme="http://yoursite.com/tags/javascript/"/>
     
       <category term="技术" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF/"/>
     
