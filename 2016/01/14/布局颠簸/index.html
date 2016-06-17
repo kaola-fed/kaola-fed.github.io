@@ -59,40 +59,40 @@
 
 
 
-<meta name="description" content="&amp;lt;!--# 事件循环-&amp;gt;布局颠簸-&amp;gt;动画性能--&amp;gt;
-
-tianyn1990
+<meta name="description" content="tianyn1990
 
 一、事件循环&amp;amp;定时器事件循环（Event Loop） 是指浏览器通过不断循环检查任务队列，使单线程的javascript语言执行异步任务的过程 文章链接
 
 上文的两张图
 
-「定时器-问题三」、「requestAnimationFrame」：如果浏览器性能不佳，setTimeout发生跳帧（其实就算浏览器性能良好也">
+「定时器-问题三」、「requestAnimationFrame」：如果浏览器性能不佳，setTimeout发生跳帧（其实就算浏览器性能良好也会发生跳帧，不可避免），Raf会造成动画变慢
+
+下">
 <meta property="og:type" content="article">
 <meta property="og:title" content="事件循环->布局颠簸->动画性能">
 <meta property="og:url" content="http://yoursite.com/2016/01/14/布局颠簸/index.html">
 <meta property="og:site_name" content="网易考拉前端Team">
-<meta property="og:description" content="&amp;lt;!--# 事件循环-&amp;gt;布局颠簸-&amp;gt;动画性能--&amp;gt;
-
-tianyn1990
+<meta property="og:description" content="tianyn1990
 
 一、事件循环&amp;amp;定时器事件循环（Event Loop） 是指浏览器通过不断循环检查任务队列，使单线程的javascript语言执行异步任务的过程 文章链接
 
 上文的两张图
 
-「定时器-问题三」、「requestAnimationFrame」：如果浏览器性能不佳，setTimeout发生跳帧（其实就算浏览器性能良好也">
-<meta property="og:updated_time" content="2016-01-14T09:14:26.000Z">
+「定时器-问题三」、「requestAnimationFrame」：如果浏览器性能不佳，setTimeout发生跳帧（其实就算浏览器性能良好也会发生跳帧，不可避免），Raf会造成动画变慢
+
+下">
+<meta property="og:updated_time" content="2016-06-17T15:19:50.605Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="事件循环->布局颠簸->动画性能">
-<meta name="twitter:description" content="&amp;lt;!--# 事件循环-&amp;gt;布局颠簸-&amp;gt;动画性能--&amp;gt;
-
-tianyn1990
+<meta name="twitter:description" content="tianyn1990
 
 一、事件循环&amp;amp;定时器事件循环（Event Loop） 是指浏览器通过不断循环检查任务队列，使单线程的javascript语言执行异步任务的过程 文章链接
 
 上文的两张图
 
-「定时器-问题三」、「requestAnimationFrame」：如果浏览器性能不佳，setTimeout发生跳帧（其实就算浏览器性能良好也">
+「定时器-问题三」、「requestAnimationFrame」：如果浏览器性能不佳，setTimeout发生跳帧（其实就算浏览器性能良好也会发生跳帧，不可避免），Raf会造成动画变慢
+
+下">
 
 
 
@@ -306,7 +306,7 @@ tianyn1990
 <blockquote>
 <p><a href="http://tianyn1990.github.io" target="_blank" rel="external">tianyn1990</a></p>
 </blockquote>
-<h2 id="u4E00_u3001_u4E8B_u4EF6_u5FAA_u73AF_26amp_3B_u5B9A_u65F6_u5668"><a href="#u4E00_u3001_u4E8B_u4EF6_u5FAA_u73AF_26amp_3B_u5B9A_u65F6_u5668" class="headerlink" title="一、事件循环&amp;定时器"></a>一、事件循环&amp;定时器</h2><p><strong>事件循环（Event Loop）</strong> 是指浏览器通过不断循环检查任务队列，使单线程的javascript语言执行异步任务的过程 <a href="http://kaola-fed.github.io/2016/01/05/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/" target="_blank" rel="external">文章链接</a></p>
+<h2 id="一、事件循环-amp-定时器"><a href="#一、事件循环-amp-定时器" class="headerlink" title="一、事件循环&amp;定时器"></a>一、事件循环&amp;定时器</h2><p><strong>事件循环（Event Loop）</strong> 是指浏览器通过不断循环检查任务队列，使单线程的javascript语言执行异步任务的过程 <a href="http://kaola-fed.github.io/2016/01/05/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/" target="_blank" rel="external">文章链接</a></p>
 <ol>
 <li><p>上文的两张图</p>
 </li>
@@ -335,7 +335,7 @@ tianyn1990
 <p>由于帧率不确定造成了动画完成时间也不确定，因此使用setTimeout(cb,delay)的方式来执行css3动画的回调函数，可能造成提前或延后，且动画的css与js也发生了耦合。</p>
 <p>因此我们可以使用<code>transitionend</code>、<code>animationstart</code>、<code>animationiteration</code>、<code>animationend</code>事件。见<a href="http://web.jobbole.com/84835/" target="_blank" rel="external">陆忠芳的早读</a></p>
 <p>至于兼容性的问题，基本上兼容transition/animation的浏览器同时也兼容对应事件，因此也不必纠结！</p>
-<h2 id="u4E8C_u3001_u5E03_u5C40_u98A0_u7C38__26amp_3B_fastDOM"><a href="#u4E8C_u3001_u5E03_u5C40_u98A0_u7C38__26amp_3B_fastDOM" class="headerlink" title="二、布局颠簸 &amp; fastDOM"></a>二、布局颠簸 &amp; fastDOM</h2><h3 id="1_u3001_u4EC0_u4E48_u662F_uFF1F"><a href="#1_u3001_u4EC0_u4E48_u662F_uFF1F" class="headerlink" title="1、什么是？"></a>1、什么是？</h3><p>需要用到上文的知识</p>
+<h2 id="二、布局颠簸-amp-fastDOM"><a href="#二、布局颠簸-amp-fastDOM" class="headerlink" title="二、布局颠簸 &amp; fastDOM"></a>二、布局颠簸 &amp; fastDOM</h2><h3 id="1、什么是？"><a href="#1、什么是？" class="headerlink" title="1、什么是？"></a>1、什么是？</h3><p>需要用到上文的知识</p>
 <p>如果在同一帧中，进行了「读-写-读」的操作，就会引发布局颠簸（Layout Thrashing），举个最经典的栗子：</p>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Read</span></span><br><span class="line"><span class="keyword">var</span> h1 = element1.clientHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Write (invalidates layout)</span></span><br><span class="line">element1.style.height = (h1 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Read (triggers layout)</span></span><br><span class="line"><span class="keyword">var</span> h2 = element2.clientHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Write (invalidates layout)</span></span><br><span class="line">element2.style.height = (h2 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br></pre></td></tr></table></figure>
 <p>当write操作发生以后，对应的布局就会失效，需要进行重新计算并reflow，浏览器原本会将这个「耗时」的操作放到下一次刷新中再统一进行一次reflow操作。</p>
@@ -347,29 +347,29 @@ tianyn1990
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Read</span></span><br><span class="line"><span class="keyword">var</span> h1 = element1.clientHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Write (invalidates layout)</span></span><br><span class="line">element1.style.height = (h1 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br><span class="line"></span><br><span class="line">requestAnimationFrame(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Read</span></span><br><span class="line">    <span class="keyword">var</span> h2 = element2.clientHeight;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Write (invalidates layout)</span></span><br><span class="line">    element2.style.height = (h2 * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>在每一帧中，先执行所有read操作，再执行所有write操作，当有新的read操作需要发生在write之后执行时，我们将它移入到下一帧执行<br>（使用requestAnimationFrame，不兼容则用setTimeout(cb,0)）</p>
 <p>chrome也在Timeline中对强制同步操作（布局颠簸）进行了提示 <a href="http://jiongks.name/blog/devtools-five-performance-features/" target="_blank" rel="external">链接</a></p>
-<h3 id="2_u3001_u300C_u7136_u800C_u300D_u6765_u4E86"><a href="#2_u3001_u300C_u7136_u800C_u300D_u6765_u4E86" class="headerlink" title="2、「然而」来了"></a>2、「然而」来了</h3><p>然而，在现实生活中，没有人像上面那样写代码，并且：</p>
+<h3 id="2、「然而」来了"><a href="#2、「然而」来了" class="headerlink" title="2、「然而」来了"></a>2、「然而」来了</h3><p>然而，在现实生活中，没有人像上面那样写代码，并且：</p>
 <p>1）代码中经常读写操作穿插在一起，如果将读写操作分开，会打乱代码书写逻辑，造成程序员理解异常。还有的时候读写顺序无法改变</p>
 <p>2）代码都是按照模块解耦的，模块A在进行读操作的时候，并不知道在此时此刻的这一帧中，另一个模块X是否刚刚进行了写操作</p>
 <p>3）更重要的是，如果有多个js动画（包括svg动画）同时执行，有可能造成大量Layout Thrashing，严重影响动画性能</p>
-<h3 id="3_u3001_u5982_u4F55_u89E3_u51B3_uFF1F"><a href="#3_u3001_u5982_u4F55_u89E3_u51B3_uFF1F" class="headerlink" title="3、如何解决？"></a>3、如何解决？</h3><p>首先，对于动画来说，缓存动画元素的各种属性值，尽量在动画开始的时候进行一次读操作就可以了，一般动画都是这样做的，</p>
+<h3 id="3、如何解决？"><a href="#3、如何解决？" class="headerlink" title="3、如何解决？"></a>3、如何解决？</h3><p>首先，对于动画来说，缓存动画元素的各种属性值，尽量在动画开始的时候进行一次读操作就可以了，一般动画都是这样做的，</p>
 <p>但需要注意的是，在链式动画过程中，前一个动画的结尾属性也需要缓存，以减少下一个动画的读操作。</p>
 <p>但这还不够，在各种非动画场景下，我们也会经常大量的操作DOM（使用jquery或nej），LT不可避免。</p>
 <p>于是类似fastDom.js这样的框架就出现了，它的原理就是利用requestAnimationFrame，将会产生LT的部分挪到下一帧中再执行，<br>而在同一帧中，先批量执行所有读操作，再批量执行写操作。</p>
 <p>具体请看：</p>
 <p>例子&gt;&gt;todo:fastdom/**/test.simple.fastdom.html;</p>
 <p>源码&gt;&gt;todo:fastdom/**/fastdom.js;</p>
-<h3 id="4_u3001_u5B9E_u9645_u8FD0_u7528fastdom"><a href="#4_u3001_u5B9E_u9645_u8FD0_u7528fastdom" class="headerlink" title="4、实际运用fastdom"></a>4、实际运用fastdom</h3><p>有个小哥在项目中用了fastdom，这里是他的<a href="https://mattandre.ws/2014/05/really-fixing-layout-thrashing/" target="_blank" rel="external">经验教训</a>。</p>
+<h3 id="4、实际运用fastdom"><a href="#4、实际运用fastdom" class="headerlink" title="4、实际运用fastdom"></a>4、实际运用fastdom</h3><p>有个小哥在项目中用了fastdom，这里是他的<a href="https://mattandre.ws/2014/05/really-fixing-layout-thrashing/" target="_blank" rel="external">经验教训</a>。</p>
 <p>他还将这个思想运用到了组件接口的设计中。<a href="https://github.com/ftlabs/ftellipsis" target="_blank" rel="external">这个</a><br>项目尝试分离了读&amp;写的API（calc读，set写），来帮助使用者合理控制读写，但在大量使用读写时，仍无法保证不触发LT。</p>
 <p>他还遭遇了另一个问题，由于使用的是单页面app，有时候在移除一些组件的时候，组件节点直接被移除了，<br>但fastdom将DOM操作放到了一下帧，当执行的时候发现组件节点已不存在，于是报错。<br>他们最后通过实例化fastdom，并扩展了一个clear方法（取名<a href="https://github.com/orangemug/instantiable-fastdom" target="_blank" rel="external">instantiable-fastdom</a>）<br>来解决。</p>
 <p>另外fastdom在后来的版本中直接try-catch掉了这种异常。</p>
-<h2 id="u4E09_u3001_u52A8_u753B_u6027_u80FD"><a href="#u4E09_u3001_u52A8_u753B_u6027_u80FD" class="headerlink" title="三、动画性能"></a>三、动画性能</h2><p>由于只做了很少的性能测试，也没有深入了解一些动画框架的原理，因此只能总结一点简单的理解。</p>
-<h3 id="js_u52A8_u753B"><a href="#js_u52A8_u753B" class="headerlink" title="js动画"></a>js动画</h3><p>在解决布局颠簸问题，并且缓存各种状态之后，我们还有以下可能提升性能的地方：</p>
+<h2 id="三、动画性能"><a href="#三、动画性能" class="headerlink" title="三、动画性能"></a>三、动画性能</h2><p>由于只做了很少的性能测试，也没有深入了解一些动画框架的原理，因此只能总结一点简单的理解。</p>
+<h3 id="js动画"><a href="#js动画" class="headerlink" title="js动画"></a>js动画</h3><p>在解决布局颠簸问题，并且缓存各种状态之后，我们还有以下可能提升性能的地方：</p>
 <ol>
 <li>忽略过于微小甚至不可见的状态改变（&lt;1px）</li>
 <li>根据实际情况主动触发GPU硬件加速</li>
 <li>raf</li>
 </ol>
-<h3 id="css_u52A8_u753B"><a href="#css_u52A8_u753B" class="headerlink" title="css动画"></a>css动画</h3><p>上面虽然列举了一系列的问题，但css动画还是又快又好。</p>
+<h3 id="css动画"><a href="#css动画" class="headerlink" title="css动画"></a>css动画</h3><p>上面虽然列举了一系列的问题，但css动画还是又快又好。</p>
 <p>在<a href="https://events.google.com/io2015/" target="_blank" rel="external">2015 Google I/0 的官方站点</a>中，<br>使用了一种被称作FLIP的原则开发动画效果<a href="https://github.com/FrontendMagazine/Works/blob/master/archive/flip-your-animation.md" target="_blank" rel="external">链接，译文</a></p>
 
       
@@ -397,6 +397,10 @@ tianyn1990
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/17/JS中的事件循环与定时器/" rel="prev" title="JS中的事件循环与定时器">
+                JS中的事件循环与定时器 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -468,7 +472,7 @@ tianyn1990
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -482,7 +486,7 @@ tianyn1990
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -521,7 +525,7 @@ tianyn1990
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E00_u3001_u4E8B_u4EF6_u5FAA_u73AF_26amp_3B_u5B9A_u65F6_u5668"><span class="nav-number">1.</span> <span class="nav-text">一、事件循环&定时器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E8C_u3001_u5E03_u5C40_u98A0_u7C38__26amp_3B_fastDOM"><span class="nav-number">2.</span> <span class="nav-text">二、布局颠簸 & fastDOM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_u3001_u4EC0_u4E48_u662F_uFF1F"><span class="nav-number">2.1.</span> <span class="nav-text">1、什么是？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2_u3001_u300C_u7136_u800C_u300D_u6765_u4E86"><span class="nav-number">2.2.</span> <span class="nav-text">2、「然而」来了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3_u3001_u5982_u4F55_u89E3_u51B3_uFF1F"><span class="nav-number">2.3.</span> <span class="nav-text">3、如何解决？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4_u3001_u5B9E_u9645_u8FD0_u7528fastdom"><span class="nav-number">2.4.</span> <span class="nav-text">4、实际运用fastdom</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E09_u3001_u52A8_u753B_u6027_u80FD"><span class="nav-number">3.</span> <span class="nav-text">三、动画性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#js_u52A8_u753B"><span class="nav-number">3.1.</span> <span class="nav-text">js动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css_u52A8_u753B"><span class="nav-number">3.2.</span> <span class="nav-text">css动画</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、事件循环-amp-定时器"><span class="nav-number">1.</span> <span class="nav-text">一、事件循环&定时器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、布局颠簸-amp-fastDOM"><span class="nav-number">2.</span> <span class="nav-text">二、布局颠簸 & fastDOM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、什么是？"><span class="nav-number">2.1.</span> <span class="nav-text">1、什么是？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、「然而」来了"><span class="nav-number">2.2.</span> <span class="nav-text">2、「然而」来了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、如何解决？"><span class="nav-number">2.3.</span> <span class="nav-text">3、如何解决？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、实际运用fastdom"><span class="nav-number">2.4.</span> <span class="nav-text">4、实际运用fastdom</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、动画性能"><span class="nav-number">3.</span> <span class="nav-text">三、动画性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#js动画"><span class="nav-number">3.1.</span> <span class="nav-text">js动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css动画"><span class="nav-number">3.2.</span> <span class="nav-text">css动画</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
